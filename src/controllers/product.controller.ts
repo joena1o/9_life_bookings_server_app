@@ -18,6 +18,16 @@ export const addProduct = async (req: Request, res: Response): Promise<any> => {
     }
 }
 
+export const getProducts = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const products = await ProductModel.find(); // Fetch all products
+        return res.status(200).json({data: products});
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Failed to fetch products" });
+    }
+}
+
 export const editProduct = async (req: Request, res: Response): Promise<any> => {
     try {
         const { id } = req.params;

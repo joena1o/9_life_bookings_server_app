@@ -1,28 +1,31 @@
 import multer, { FileFilterCallback } from 'multer';
 import { Request } from 'express';
 import fs from 'fs';
+import path from 'path';
 
 const storage = multer.diskStorage({
     destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
-        let uploadDir = '../uploads/';
+        let uploadDir = './uploads/';
 
         if (['image/jpeg', 'image/png', 'image/jpg'].includes(file.mimetype)) {
             uploadDir += 'images/';
-          } else if (['application/pdf', 'text/plain'].includes(file.mimetype)) {
+        } else if (['application/pdf', 'text/plain'].includes(file.mimetype)) {
             uploadDir += 'documents/';
-          } else {
+        } else {
             uploadDir += 'others/';
-          }
-        
+        }
+
         // Check if directory exists, if not create it
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
-        
+
         cb(null, uploadDir);
     },
     filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-        cb(null, `${new Date().toISOString()}-` + file.originalname);
+        // Replace invalid characters in the timestamp
+        const sanitizedTimestamp = new Date().toISOString().replace(/:/g, '-');
+        cb(null, `${sanitizedTimestamp}-${file.originalname}`);
     }
 });
 
