@@ -18,6 +18,17 @@ export const addRating = async (req: Request, res: Response): Promise<any> => {
     }
 }
 
+
+export const fetchUserRating = async (req: Request, res: Response): Promise<any> => {
+    const {userId} = req.body;
+    try{
+        let reviews = await RatingModel.find({userId});
+        return res.status(200).json({data: reviews});
+    }catch(err){
+        return res.status(500).json({ error: err });
+    }
+}
+
 export const deleteReview = async (req: Request, res: Response): Promise<any> => {
     try {
         const { id } = req.body;
