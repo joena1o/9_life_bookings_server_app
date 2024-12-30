@@ -13,7 +13,7 @@ const ProductSchema = new mongoose.Schema({
   price: {type: Number, required: true},
   rent: {type: Boolean, default: false},
   Duration: {type: Number, default: null},
-});
+}, { timestamps: true });
 
 const ProductModel = mongoose.model("product", ProductSchema);
 export default ProductModel;
