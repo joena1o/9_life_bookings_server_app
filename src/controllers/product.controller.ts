@@ -20,7 +20,7 @@ export const addProduct = async (req: Request, res: Response): Promise<any> => {
 
 export const getProducts = async (req: Request, res: Response): Promise<any> => {
     try {
-        const products = await ProductModel.find(); // Fetch all products
+        const products = await ProductModel.find().sort({ createdAt: 1 }); // Fetch all products
         return res.status(200).json({data: products});
     } catch (error) {
         console.error("Error fetching products:", error);
