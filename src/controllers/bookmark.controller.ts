@@ -18,7 +18,7 @@ export const bookmarkItem = async (req: Request, res: Response): Promise<any> =>
             return res.status(200).json({ message: "Bookmark removed successfully", added: false });
         } else {
             // If it doesn’t exist, add it
-            const newBookmark = await bookMarkedModel.create({ user_id, product_id });
+            await bookMarkedModel.create({ user_id, product_id });
             return res.status(201).json({
                 message: "Item has been bookmarked successfully", added: true
             });
@@ -37,7 +37,10 @@ export const getUsersBookmarks = async (req: Request, res: Response): Promise<an
     if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
       const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
       const user_id = payload.userId;
-        const products = await bookMarkedModel.find({user_id}).populate('product_id').sort({ createdAt: 1 }); // Fetch all products
+        const products = await bookMarkedModel.find({user_id}).populate({path: 'product_id',
+            populate: {
+              path: 'user_id', // Nested field inside product_id
+            }}).sort({ createdAt: 1 }); // Fetch all products
         return res.status(200).json({data: products});
     }
     } catch (error) {

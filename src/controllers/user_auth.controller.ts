@@ -130,9 +130,12 @@ export const verifyPhone = async (req: Request, res: Response): Promise<any> => 
 export const updateProfilePic = async (req: Request, res: Response): Promise<any> => {
     try{
       const {imageUrl, id} = req.body;
-      const user = await UserModel.findOneAndUpdate({_id: id}, {picture: imageUrl});
+      const user = await UserModel.findOneAndUpdate({_id: id}, {picture: imageUrl},{new: true});
       if(user){
-        return res.status(200).json({message: "Profile Picture Updated Successfully", data: user})
+        const sortedUser = Object.fromEntries(
+          Object.entries(user.toObject()).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+        );
+        return res.status(200).json({message: "Profile Picture Updated Successfully", data: sortedUser})
       }
       return res.status(400).json({message: "Unable to process your request"})
     }catch(e){

@@ -28,7 +28,7 @@ export const getProducts = async (req: Request, res: Response): Promise<any> => 
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
             // Fetch all products
-            const products = await ProductModel.find().sort({ createdAt: -1 }).lean();
+            const products = await ProductModel.find().populate("user_id").sort({ createdAt: -1 }).lean();
             // Fetch all bookmarks for the user
             const bookmarks = await bookMarkedModel.find({ user_id }).lean();
             const bookmarkedProductIds = bookmarks.map(bookmark => bookmark.product_id);
@@ -51,7 +51,7 @@ export const getUsersProducts = async (req: Request, res: Response): Promise<any
         if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
-            const products = await ProductModel.find({ user_id }).sort({ createdAt: 1 }); // Fetch all products
+            const products = await ProductModel.find({ user_id }).populate("user_id").sort({ createdAt: -1 }); // Fetch all products
             return res.status(200).json({ data: products });
         }
     } catch (error) {
