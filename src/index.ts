@@ -5,6 +5,8 @@ import ImageRoute from './routes/image.route';
 import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.routes';
 import RatingRoute from './routes/rating.route';
+import BookmarkRoute from './routes/bookmark.route';
+
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
@@ -19,6 +21,7 @@ app.use("/image", ImageRoute);
 app.use("/user", UserRoute);
 app.use("/product", ProductRoute);
 app.use("/rating", RatingRoute);
+app.use("/bookmark", BookmarkRoute);
 
 // Sample route
 app.get('/', (req: Request, res: Response) => {
