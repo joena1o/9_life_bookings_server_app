@@ -5,6 +5,7 @@ const ProductSchema = new mongoose.Schema({
   description: {type: String, required: true},
   bathrooms: {type: Number, required: true},
   bedrooms: {type: Number, required: true},
+  toilets: {type: Number, required: true, default: 1},
   parkingSpace: {type: Number, required: true, default: 1},
   landArea: {type: Number, required: true},
   images: {type: [String], required: true},

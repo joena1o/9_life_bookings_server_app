@@ -12,7 +12,7 @@ export const addProduct = async (req: Request, res: Response): Promise<any> => {
         if (product) {
             return res
                 .status(201)
-                .json({ data: product, message: "Product Uploaded Successfully" });
+                .json({ added: true, message: "Product Uploaded Successfully" });
         } else {
             return res.status(400).json({ error: "An Error Occured while processing your request" });
         }
@@ -62,9 +62,9 @@ export const getUsersProducts = async (req: Request, res: Response): Promise<any
 
 export const editProduct = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { id } = req.params;
+        const { user_id, product_id } = req.body;
         const updatedData = req.body;
-        let product = await ProductModel.findOneAndUpdate({ _id: id }, {
+        let product = await ProductModel.findOneAndUpdate({ _id: product_id, user_id}, {
             $set: updatedData
         });
         if (product) {
@@ -85,11 +85,15 @@ export const deleteProduct = async (req: Request, res: Response): Promise<any> =
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "Invalid product ID." });
         }
-        const deletedProduct = await ProductModel.findByIdAndDelete(id);
-        if (!deletedProduct) {
-            return res.status(401).json({ error: "Product not found." });
+        const deleteBookmarks = await bookMarkedModel.deleteMany({product_id: id});
+        if(deleteBookmarks){
+            const deletedProduct = await ProductModel.findByIdAndDelete(id);
+            if (!deletedProduct) {
+                return res.status(401).json({ error: "Product not found." });
+            }
+            return res.status(200).json({ message: "Product deleted successfully." });
         }
-        res.status(200).json({ message: "Product deleted successfully." });
+        return res.status(401).json({ error: "An error occured while processing your request." });
     } catch (err) {
         return res.status(500).json({ error: err });
     }

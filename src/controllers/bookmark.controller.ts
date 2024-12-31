@@ -15,12 +15,12 @@ export const bookmarkItem = async (req: Request, res: Response): Promise<any> =>
         if (existingBookmark) {
             // If it exists, remove it
             await bookMarkedModel.deleteOne({ _id: existingBookmark._id });
-            return res.status(200).json({ message: "Bookmark removed successfully", added: false });
+            return res.status(200).json({ message: "Item removed from bookmark", added: false });
         } else {
             // If it doesn’t exist, add it
             await bookMarkedModel.create({ user_id, product_id });
             return res.status(201).json({
-                message: "Item has been bookmarked successfully", added: true
+                message: "Item has been added to your bookmark", added: true
             });
         }
     } catch (err) {
