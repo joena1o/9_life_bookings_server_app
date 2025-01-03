@@ -45,6 +45,66 @@ export const getProducts = async (req: Request, res: Response): Promise<any> => 
     }
 }
 
+export const searchAndFilterProducts = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const accessToken = decodeToken(req.headers.authorization!);
+        if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
+            const payload = accessToken.payload as JwtPayload;
+            const user_id = payload.userId;
+
+            // Extract query parameters for search and filtering
+            const { search, category, type, minPrice, maxPrice, sortBy } = req.query;
+
+            // Build the query object dynamically
+            const query: any = {};
+
+            if (search) {
+                query.$or = [
+                    { title: { $regex: search, $options: "i" } }, // Case-insensitive match for product name
+                    { description: { $regex: search, $options: "i" } } // Case-insensitive match for product description
+                ];
+            }
+
+            if (category) {
+                query.category = category;
+            }
+
+            if(type){
+                query.type = type;
+            }
+
+            if (minPrice || maxPrice) {
+                query.price = {};
+                if (minPrice) query.price.$gte = parseFloat(minPrice as string);
+                if (maxPrice) query.price.$lte = parseFloat(maxPrice as string);
+            }
+
+            // Fetch products based on query
+            const products = await ProductModel.find(query)
+                .populate("user_id")
+                .sort({ [sortBy as string || "createdAt"]: -1 })
+                .lean();
+
+            // Fetch all bookmarks for the user
+            const bookmarks = await bookMarkedModel.find({ user_id }).lean();
+            const bookmarkedProductIds = bookmarks.map(bookmark => bookmark.product_id);
+
+            // Add `isBookmarked` field to products
+            const productsWithBookmarkInfo = products.map(product => ({
+                ...product,
+                isBookmarked: bookmarkedProductIds.includes(product._id.toString())
+            }));
+
+            return res.status(200).json({ data: productsWithBookmarkInfo });
+        } else {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Failed to fetch products" });
+    }
+};
+
 export const getUsersProducts = async (req: Request, res: Response): Promise<any> => {
     try {
         const accessToken = decodeToken(req.headers.authorization!);
