@@ -7,6 +7,7 @@ const router = Router();
 router.post("/", authenticateToken, ProductController.addProduct);
 router.get("/", authenticateToken, ProductController.getProducts);
 router.get("/users", authenticateToken, ProductController.getUsersProducts);
+router.get("/search", authenticateToken, ProductController.searchAndFilterProducts);
 router.patch("/", authenticateToken, ProductController.editProduct);
 router.delete("/", authenticateToken, ProductController.deleteProduct);
 

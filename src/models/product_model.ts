@@ -10,6 +10,11 @@ const ProductSchema = new mongoose.Schema({
   landArea: {type: Number, required: true},
   images: {type: [String], required: true},
   user_id: {type: String, required: true, ref: "user"},
+  type:{
+    type: String,
+    enum: ['Residential', 'Commercial', 'Land', 'Hospitality', 'Industrial', 'Specialty'],
+    required: true
+  },
   category: {type: String, required: true},
   //location: {type: [Number], required: true},
   price: {type: Number, required: true},
