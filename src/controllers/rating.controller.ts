@@ -20,9 +20,14 @@ export const addRating = async (req: Request, res: Response): Promise<any> => {
 
 
 export const fetchUserRating = async (req: Request, res: Response): Promise<any> => {
-    const {userId} = req.body;
+    const {creatorUserId} = req.query;
     try{
-        let reviews = await RatingModel.find({userId});
+        let reviews = await RatingModel.find({creatorUserId}).populate(
+            [
+                { path: "creatorUserId" }, // Populate posts with selected fields
+                { path: "userId" }, // Populate comments with selected fields
+              ]
+        );
         return res.status(200).json({data: reviews});
     }catch(err){
         return res.status(500).json({ error: err });

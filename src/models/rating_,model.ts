@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 const RatingSchema = new mongoose.Schema({
-    userId: {type: String, required: true},
+    userId: {type: String, required: true, ref: "user" },
+    creatorUserId: {type: String, required: true, ref: "user"},
     postId: {type: String, required: true},
     rating: {type: Number, required: true},
-    comment: {type: String, default: null}
+    review: {type: String, default: null, required: true}
 });
 
 const RatingModel = mongoose.model("ratings", RatingSchema);

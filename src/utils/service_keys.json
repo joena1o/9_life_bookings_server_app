@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "lifebookings-63093",
+  "private_key_id": "04799466f61a9f8215b4cb70eda27abea957a4b3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDUes0oxcf5Mecq\nm5c7e395KTcpQAVnOFFDX8d5rjmuAQkTHjHUp2uBSSjVf1oK718m/kW5/GhC1MvY\nwC9PRhP/0wsqQCOiS65I9oNVI1FElyCBHCGuMvq4ywMoY4f7Ef631TbYTerLOtLq\nNt9KDL7C9mBN7HsoSBKpAsDCpddQiCQYNFE0exGQpnKAk78VwqJ5LRGD83BssWgF\nMR1cctgmPNgE0IT1Gl1/Ae7urpdHNMdSkcuE+eVvzdeDXauYmz1hdqop2d2AwIWQ\nmMbtf5hUz1W4q9005njA0xPC00/UYFG5PFnEHaMyj7Poxb21cBVh2hZ60i91x3+w\nCb8UAkkXAgMBAAECggEASDeGtFVojrtV0Ob6AzcJz+HgxC3kyDzdbdNHZoV/SDNE\n5NEN6bOPd+0oKkwzC+Vox0WD6F8wBorxz7UeP0jXsksGD/GlytsDHPxgDddHn1Lo\nMsmfbugXzCf/5kHR7VUj6FJY5jKxWyqelglZYf8r9PKtL77w6vN4GCZ94opgQJet\nzWcfkaiSvKKzu8oYGfMpdjuzOfHZOTIpcgmp5OfjI16d08cseml1dZ5MznNjce2J\nLcmu4yNWr6ccSqu7vceIJgbx9SW6peI+zt9Ly/9O9l47h7EXMA83jhtQZztPNtr9\nGNbXjtRnkfwTR+rFtv6oY3Xe/IC28BdrIuKnMn2lEQKBgQD/iQ1RMY41tl9gwrVP\n63Ttr3YkmxCgTG/v6512Ho80obw1Q21DOomVjI131zysR01SdVYqjjpceeUkcS6S\nllDLZu7i+1m0cGcPmYegXkpgkOgUfXIHjZdpt9m6onOkfvgTnT5mMhu9geP+xjtV\nvNAi1M0TZwiQm5JoTjOSrY4t8QKBgQDU3bUlNIV/f6CokF1OamEot/qi/bXbONFI\n4nAik+NILhhwNHAhtVk1UyF5spYU7w4/8O196ZGjzujyfeDlE+3qjPYNnvZ+ip5a\naMzXGu03Aqt/ke7lZyaEF8jBe2a6AKN17UkJQW5BCB53rSga9aNZyQA6CcB9c0cv\nNB66QZX/hwKBgHqOeNygL9yDA2uc9ujFvObiaH9V/7th7a3cC0FDlttfVq0VEapU\nwPgA2TjI+kiGSgdqT1FJtaP0snmv7u5POaDUVW53rqZj4ooQ0IORtYpq9WQeZjpJ\nJn2Ft99TWrNiUgjWOb85+SQC0B65ZGvSiuCpv1G28NyqQKXWG9YVd0OBAoGAZncu\nqnEkzeHmuR18/LEygcJGEM1mC9fGznnJlqtvnaAqvWBQlblQ7t1MYON5YSxNxLO5\n7oFPTPXdplS3vC2iueQO0TGy3+jkHwsRh337sB5F5Yue3qiPnshAJ/q50VFbXfnR\nzXXEl+NLnzon8wpJDoA17rohAYJLQsqo++l0ReMCgYBfG7ySuc20y1TrmIVLEJmZ\nQO6M/M5Cx8bJFuD+M8si6HuNQcI6512QReRrYCxlQRBIP0wUcXdRl+yp5QammqXA\n516PwNak82fvthzxxHb5XwRh+FtztuK7A+jMje8FiLIKjv8mEYa1TMfqyBMbU6mL\nMclvUXt7H9h+t7UVQ3Cvxg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-zidjj@lifebookings-63093.iam.gserviceaccount.com",
+  "client_id": "113985685586225403540",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-zidjj%40lifebookings-63093.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

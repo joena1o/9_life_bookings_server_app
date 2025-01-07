@@ -5,6 +5,7 @@ import * as RatingController from '../controllers/rating.controller';
 const router = Router();
 
 router.post("/", authenticateToken, RatingController.addRating);
+router.get("/", authenticateToken, RatingController.fetchUserRating);
 router.delete("/", authenticateToken, RatingController.deleteReview);
 
 export default router;

@@ -22,7 +22,8 @@ const UserSchema = new mongoose.Schema({
       index: "2dsphere",
       default: []
     }
-  }
+  },
+  fcmToken: {type: String, default: null}
 });
 
 const UserModel = mongoose.model("user", UserSchema);

@@ -31,13 +31,13 @@ const sendOtp = async (to: string, pin: number): Promise<any> => {
     api_key: process.env.TERMII_API_KEY,
     message_type: "NUMERIC",
     to,
-    from: "N-Alert",
-    channel: "dnd",
+    from: "9LifeBookings",
+    channel: "generic",
     pin_attempts: 10,
     pin_time_to_live: 5,
     pin_length: 4,
     pin_placeholder: pin,
-    message_text: `Your Blue Collar Confirmation Code is ${pin}. it expires in 5 minutes.`,
+    message_text: `Your 9Life Bookings Confirmation Code is ${pin}. it expires in 5 minutes.`,
     pin_type: "NUMERIC",
   };
   const options: AxiosRequestConfig = {

@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
     },
   });
 
-async function sendEmail(_to:string, _subject:string, name:string){
+async function sendWelcomeEmail(_to:string, _subject:string, name:string){
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,
     to: _to,
@@ -45,7 +45,7 @@ async function sendAdAlertEmail(_to:string, _subject:string, mail:string){
   });
 }
 
-async function sendOtp(_to:string, _subject:string, otp:number){
+async function sendEmailOtp(_to:string, _subject:string, otp:number){
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,
     to: _to,
@@ -62,12 +62,12 @@ async function sendOtp(_to:string, _subject:string, otp:number){
   });
 }
 
-async function sendVerifyEmailOtp(_to:string, _subject:string, otp:number){
+async function sendVerifyEmailOtp(_to:string, _subject:string, otp:number, user:string){
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,
     to: _to,
     subject: _subject,
-    html: verifyEmailTemplate(otp, _to)
+    html: verifyEmailTemplate(otp, _to, user)
   };
   // Send the email
   transporter.sendMail(mailOptions, (error, info) => {
@@ -79,4 +79,4 @@ async function sendVerifyEmailOtp(_to:string, _subject:string, otp:number){
   });
 }
 
-export {sendEmail, sendOtp, sendAdAlertEmail, sendVerifyEmailOtp}
+export {sendWelcomeEmail, sendEmailOtp, sendAdAlertEmail, sendVerifyEmailOtp}
