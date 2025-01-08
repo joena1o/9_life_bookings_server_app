@@ -6,7 +6,6 @@ import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.routes';
 import RatingRoute from './routes/rating.route';
 import BookmarkRoute from './routes/bookmark.route';
-import { sendNotification } from './controllers/push_notification_controller';
 
 
 const app = express();
