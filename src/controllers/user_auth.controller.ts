@@ -8,8 +8,8 @@ import { isExpired } from "../utils/time_util";
 import { sendEmailOtp, sendVerifyEmailOtp, sendWelcomeEmail } from "../utils/email_request";
 import { sendOtp, verifyOtp } from '../utils/sms_request';
 import { decodeToken } from "../utils/jwt_service";
-import { sendNotification } from "./push_notification_controller";
 import forgotPasswordModel from "../models/forgot_password_model";
+import { sendNotificationToUser } from "../utils/push_notification_util";
 
 dotenv.config();
 const jwtSecret: any = process.env.JWT_SECRET;
@@ -30,7 +30,7 @@ export const createUserManualSignUp = async (req: Request, res: Response): Promi
       picture,
       referralCode,
     });
-    const token = jwt.sign({ userId: user._id, name: user.firstName  }, jwtSecret);
+    const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
     const sortedUser = Object.fromEntries(
       Object.entries(user.toObject()).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
     );
@@ -64,7 +64,11 @@ export const LoginUser = async (req: Request, res: Response): Promise<any> => {
         return res.status(400).json({ error: "Invalid Login credentials" });
       }
       const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
-
+      sendNotificationToUser(
+        "9LifeBookings",
+        `Welcome back ${user.firstName}`,
+        user._id.toString()
+      );
       return res.status(200).json({ data: user, message: "Login successful", token });
     }
   } catch (error) {
@@ -124,12 +128,26 @@ export const verifyEmail = async (req: Request, res: Response): Promise<any> => 
 
 export const verifyPhone = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { pinId, pin } = req.body;
-    const result = await verifyOtp(pinId, pin);
-    if (result.verified) {
-      return res.status(200).json({ message: "Phone Verified successfully", data: result });
-    } else {
-      return res.status(400).json({ error: "Incorrect Pin", data: result });
+    const { pinId, pin, newPhoneNumber } = req.body;
+    const accessToken = decodeToken(req.headers.authorization!);
+    if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
+      const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
+      const user_id = payload.userId;
+      const result = await verifyOtp(pinId, pin);
+      if (result.verified) {
+        const updatePhoneNumber = await UserModel.findOneAndUpdate(
+          { _id: user_id }, // Find the user by their unique ID
+          { "profile.phone": newPhoneNumber }, // Update the phone field
+          { new: true } // Return the updated document
+        );
+        if(updatePhoneNumber){
+          return res.status(200).json({ message: "Phone Verified successfully", data: updatePhoneNumber });
+        }else{
+          return res.status(400).json({ error: "An Error occured when updating your phone number", data: result });
+        }
+      } else {
+        return res.status(400).json({ error: "Incorrect Pin", data: result });
+      }
     }
   } catch (e) {
     res.status(500).json({ error: e });
@@ -266,10 +284,10 @@ export const changePassword = async (req: Request, res: Response): Promise<any> 
       const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
       const userId = payload.userId;
       //Check if user exists
-      const userDetails = await UserModel.findById(userId);      
+      const userDetails = await UserModel.findById(userId);
       //Check if password is valid
       const doesPasswordExist = await argon2.verify(userDetails?.password!, password);
-      if(!doesPasswordExist){
+      if (!doesPasswordExist) {
         console.log(doesPasswordExist);
         return res.status(400).json({ error: "Password entered is not correct" });
       }

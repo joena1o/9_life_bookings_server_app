@@ -1,12 +1,30 @@
 import { Response, Request } from "express";
 import mongoose from "mongoose";
 import RatingModel from "../models/rating_,model";
+import UserModel from "../models/user_model";
+import { sendNotificationToUser } from "../utils/push_notification_util";
+import ProductModel from "../models/product_model";
 
 
 export const addRating = async (req: Request, res: Response): Promise<any> => {
+    const {userId, creatorUserId, postId, rating, review} = req.body;
     try {
-        let review = await RatingModel.create(req.body);
-        if (review) {
+        let createReview = await RatingModel.create(req.body);
+        if (createReview) {
+            const reviewer = await UserModel.findOne({
+                _id: userId,
+            });
+            const product = await ProductModel.findOne({
+                _id: postId,
+            });
+            if(reviewer && product){
+                sendNotificationToUser(
+                    "9LifeBookings",
+                    `🌟 ${reviewer.firstName} ${reviewer.lastName} just left a ${rating}⭐️ review! 🎉\n\n💬 "${review}"\n\nCheck it out now! 🚀`,
+                    creatorUserId.toString(),
+                    product.images[0]
+                  );
+            }
             return res
                 .status(201)
                 .json({ data: review, message: "Review has been uploaded successfully" });
