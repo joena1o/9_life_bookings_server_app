@@ -6,6 +6,7 @@ import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.routes';
 import RatingRoute from './routes/rating.route';
 import BookmarkRoute from './routes/bookmark.route';
+import BankingDetailsRoute  from './routes/bank_account.route';
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/user", UserRoute);
 app.use("/product", ProductRoute);
 app.use("/rating", RatingRoute);
 app.use("/bookmark", BookmarkRoute);
+app.use("/banking", BankingDetailsRoute);
 
 // Sample route
 app.get('/', async (req: Request, res: Response) =>  {

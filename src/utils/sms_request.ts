@@ -51,6 +51,7 @@ const sendOtp = async (to: string, pin: number): Promise<any> => {
 
   try {
     const response = await axios(options);
+    console.log(data);
     return response.data;
   } catch (error) {
     console.log(error);
