@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema({
       default: []
     }
   },
+  account_id: {type: String, unique: true, default: null, ref:"SubAccount"},
   fcmToken: {type: String, default: null}
 });
 

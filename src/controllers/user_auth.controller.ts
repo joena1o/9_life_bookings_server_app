@@ -65,8 +65,8 @@ export const LoginUser = async (req: Request, res: Response): Promise<any> => {
       }
       const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
       sendNotificationToUser(
-        "9LifeBookings",
-        `Welcome back ${user.firstName}`,
+        "Welcome Back to 9LifeBookings!",
+        `Hi ${user.firstName}, we're thrilled to have you back. Let's make your experience amazing! 🚀`,
         user._id.toString()
       );
       return res.status(200).json({ data: user, message: "Login successful", token });
