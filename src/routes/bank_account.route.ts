@@ -7,5 +7,6 @@ const router = Router();
 router.post("/", authenticateToken, BankController.addBankDetails);
 router.get("/", authenticateToken, BankController.getBankDetails);
 router.patch("/", authenticateToken, BankController.updateAccountDetails);
+router.post("/initiate-payment", authenticateToken, BankController.initiatePayment);
 
 export default router;
