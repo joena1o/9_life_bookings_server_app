@@ -7,6 +7,8 @@ const router = Router();
 
 router.post('/sign-up', UserController.createUserManualSignUp);
 router.post('/login', UserController.LoginUser);
+router.post('/sign-up-google', UserController.createUserGoogleSignUp);
+router.post('/login-google', UserController.LoginUserGoogle);
 //Email Verification
 router.post('/request-otp', UserController.requestEmailOtp);
 router.post('/verify-email', authenticateToken, UserController.verifyEmail);

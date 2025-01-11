@@ -1,9 +1,10 @@
 import bank_details_model from "../models/bank_details_model";
 import { Request, Response } from 'express';
-import { createPayStackAccount } from "../utils/create_paystack_sub_account";
+import { createPayStackAccount, updatePayStackAccount } from "../utils/create_paystack_sub_account";
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
 import UserModel from "../models/user_model";
+import axios from "axios";
 
 export const addBankDetails = async (req: Request, res: Response): Promise<any> => {
     try { 
@@ -17,18 +18,17 @@ export const addBankDetails = async (req: Request, res: Response): Promise<any> 
             account_number,
             percentage_charge,
         } = req.body;
-        console.log(req.body);
         let createData = await createPayStackAccount(
             business_name, bank_code, account_number, percentage_charge,
         );
-        console.log(createData);
         if (createData.status) {
             let accountDetails = await bank_details_model.create({...createData.data,
                 user_id
             });
             if (accountDetails) {
-                const userDetails = await UserModel.findByIdAndUpdate(user_id, { $set: {account_id: accountDetails?._id!.toString()} },       // Update data
-                    { new: true } )
+                await UserModel.findByIdAndUpdate(user_id, { $set: {account_id: accountDetails?._id!.toString(),
+                    sub_account: accountDetails?.subaccount_code
+                } },)
                 return res
                     .status(201)
                     .json({ data: accountDetails, message: "Your bank details have been added successfully" });
@@ -56,19 +56,19 @@ export const updateAccountDetails = async (req: Request, res: Response):Promise<
             bank_code,
             account_number,
             percentage_charge,
+            sub_account
         } = req.body;
-        console.log(req.body);
-        let createData = await createPayStackAccount(
-            business_name, bank_code, account_number, percentage_charge,
+        let createData = await updatePayStackAccount(
+            business_name, bank_code, account_number, percentage_charge, sub_account
         );
-        console.log(createData);
         if (createData.status) {
             let accountDetails = await bank_details_model.findOneAndUpdate({user_id}, {...createData.data,
                 user_id
             }, {new: true});
             if (accountDetails) {
-               await UserModel.findByIdAndUpdate(user_id, { $set: {account_id: accountDetails?._id!.toString()} },       // Update data
-                    { new: true } )
+               await UserModel.findByIdAndUpdate(user_id, { $set: {account_id: accountDetails?._id!.toString(),
+                sub_account: accountDetails?.subaccount_code
+               } },)
                 return res
                     .status(201)
                     .json({ data: accountDetails, message: "Your bank details have been added successfully" });
@@ -98,3 +98,28 @@ export const getBankDetails = async(req: Request, res: Response): Promise<any>=>
         return res.status(500).json({ error: err });
     }
 }
+
+export const initiatePayment = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const {email, amount, subaccount} = req.body;
+      const response = await axios.post(
+        `${process.env.PAYSTACK_API}/transaction/initialize`,
+        {
+          email,
+          amount, // Amount in kobo (₦5000)
+          subaccount, // Subaccount code from step 1
+          bearer: 'subaccount', // Specify who bears the Paystack fee
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.TEST_SECRET_KEY}`,
+          },
+        }
+      );
+      return res.status(200).json({data: response.data});
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error });
+    }
+  };
+    

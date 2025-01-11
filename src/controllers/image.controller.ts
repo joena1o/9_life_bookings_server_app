@@ -27,6 +27,7 @@ const cloudinary_upload = (file: string, folder: string): Promise<CloudinaryUplo
       },
       (error, result) => {
         if (error) {
+          console.log(`this is the eror ${error.message}`);
           reject(error);
         } else {
           resolve({

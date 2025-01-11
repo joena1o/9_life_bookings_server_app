@@ -44,6 +44,36 @@ export const createUserManualSignUp = async (req: Request, res: Response): Promi
   }
 };
 
+export const createUserGoogleSignUp = async (req: Request, res: Response): Promise<any> => {
+  const { email, googleId, firstName, picture, lastName, referralCode } = req.body;
+  try {
+    let user = await UserModel.findOne({ email: email });
+    if (user) {
+      return res.status(400).json({ error: "User already exists" });
+    }
+    const hashedgoogleId = await argon2.hash(googleId.toString());
+    user = await UserModel.create({
+      firstName,
+      lastName,
+      email,
+      googleId: hashedgoogleId,
+      picture,
+      referralCode,
+    });
+    const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
+    const sortedUser = Object.fromEntries(
+      Object.entries(user.toObject()).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+    );
+    sendWelcomeEmail(email, "9lifeBookings", firstName);
+    return res
+      .status(201)
+      .json({ data: sortedUser, message: "User registered successfully", token });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: err });
+  }
+};
+
 export const LoginUser = async (req: Request, res: Response): Promise<any> => {
   const { email, password } = req.body;
   try {
@@ -54,12 +84,43 @@ export const LoginUser = async (req: Request, res: Response): Promise<any> => {
     if (user.googleId && !user.password) {
       return res
         .status(400)
-        .send(
-          "This account was created using Google. Please log in with Google."
-        );
+        .json({error:
+          "The credentials you entered are incorrect. Please try again or use Google to sign in."
+    });
     }
     if (user.password) {
       const isMatch = await argon2.verify(user.password, password);
+      if (!isMatch) {
+        return res.status(400).json({ error: "Invalid Login credentials" });
+      }
+      const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
+      sendNotificationToUser(
+        "Welcome Back to 9LifeBookings!",
+        `Hi ${user.firstName}, we're thrilled to have you back. Let's make your experience amazing! 🚀`,
+        user._id.toString()
+      );
+      return res.status(200).json({ data: user, message: "Login successful", token });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const LoginUserGoogle = async (req: Request, res: Response): Promise<any> => {
+  const { email, googleId } = req.body;
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    if (!user.googleId && user.password) {
+      return res
+        .status(400)
+        .json({error:
+          "We detected an existing account with this email. Please log in using your email and password"});
+        }
+    if (user.googleId) {
+      const isMatch = await argon2.verify(user.googleId, googleId);
       if (!isMatch) {
         return res.status(400).json({ error: "Invalid Login credentials" });
       }
