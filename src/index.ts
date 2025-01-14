@@ -7,6 +7,8 @@ import ProductRoute from './routes/product.routes';
 import RatingRoute from './routes/rating.route';
 import BookmarkRoute from './routes/bookmark.route';
 import BankingDetailsRoute  from './routes/bank_account.route';
+import AdminCustomerRoute from './routes/admin_routes/admin_customer_route';
+import AdminDashboardRoute from './routes/admin_routes/admin_dashboard_route';
 import { createHmac } from 'crypto';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -20,12 +22,18 @@ app.use(express.json());
 
 connectToDb();
 
+//User Routes
 app.use("/image", ImageRoute);
 app.use("/user", UserRoute);
 app.use("/product", ProductRoute);
 app.use("/rating", RatingRoute);
 app.use("/bookmark", BookmarkRoute);
 app.use("/banking", BankingDetailsRoute);
+
+//Admin Routes
+app.use("/admin/customers", AdminCustomerRoute);
+app.use("/admin/dashboard", AdminDashboardRoute);
+
 
 app.post('/webhook', (req: Request, res: Response) => {
   try {
@@ -36,7 +44,6 @@ app.post('/webhook', (req: Request, res: Response) => {
       console.error('Missing Paystack signature');
        res.status(400).send('Missing signature');
     }
-
     // Compute the HMAC hash using the secret key and request body
     const hash = createHmac('sha512', process.env.TEST_SECRET_KEY!)
       .update(JSON.stringify(req.body)) // Hash the stringified body
@@ -47,22 +54,25 @@ app.post('/webhook', (req: Request, res: Response) => {
       console.error('Invalid Paystack signature');
       res.status(401).send('Unauthorized');
     }
-
     // Process the event
     const event = req.body;
     console.log('Event received:', event);
 
     if (event.event === 'charge.success') {
       const transactionData = event.data;
-
       console.log('Transaction successful:', transactionData);
 
-      // Perform necessary actions:
+      const { metadata } = transactionData;
+      if (metadata) {
+        const { merchantId, userId, productId } = metadata;
+        console.log(`Merchant ID: ${merchantId}, User ID: ${userId}, Order ID: ${productId}`);
+       } // Perform necessary actions:
       // - Update database
       // - Send email notifications
       // - Fulfill orders, etc.
+    }else{
+      
     }
-
     // Acknowledge the webhook event
     res.status(200).send('Webhook received');
   } catch (error) {
