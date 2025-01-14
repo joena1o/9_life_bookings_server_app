@@ -11,6 +11,8 @@ import AdminCustomerRoute from './routes/admin_routes/admin_customer_route';
 import AdminDashboardRoute from './routes/admin_routes/admin_dashboard_route';
 import { createHmac } from 'crypto';
 import dotenv from 'dotenv';
+import OrderModel from './models/order_model';
+import { sendNotificationToUser } from './utils/push_notification_util';
 dotenv.config();
 
 const app = express();
@@ -35,7 +37,7 @@ app.use("/admin/customers", AdminCustomerRoute);
 app.use("/admin/dashboard", AdminDashboardRoute);
 
 
-app.post('/webhook', (req: Request, res: Response) => {
+app.post('/webhook', async (req: Request, res: Response) => {
   try {
     // Retrieve the Paystack signature from headers
     const signature = req.headers['x-paystack-signature'] as string;
@@ -57,19 +59,32 @@ app.post('/webhook', (req: Request, res: Response) => {
     // Process the event
     const event = req.body;
     console.log('Event received:', event);
-
     if (event.event === 'charge.success') {
       const transactionData = event.data;
       console.log('Transaction successful:', transactionData);
-
-      const { metadata } = transactionData;
+      const { metadata, amount } = transactionData;
       if (metadata) {
-        const { merchantId, userId, productId } = metadata;
+        const { merchantId, userId, productId, user, merchantName } = metadata;
         console.log(`Merchant ID: ${merchantId}, User ID: ${userId}, Order ID: ${productId}`);
-       } // Perform necessary actions:
-      // - Update database
-      // - Send email notifications
-      // - Fulfill orders, etc.
+        let submitOrder = await OrderModel.create({
+          merchantId,
+          userId,
+          productId,
+          amount
+        });
+        if(submitOrder){
+          sendNotificationToUser(
+            "Your property has been bought",
+            `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
+            merchantId.toString()
+          );
+          sendNotificationToUser(
+            "Your payment has been confirmed",
+            `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
+            userId.toString()
+          );
+        }
+      } // Perform necessary actions:
     }else{
       
     }
