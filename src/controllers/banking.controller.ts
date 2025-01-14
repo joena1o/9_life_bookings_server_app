@@ -101,14 +101,15 @@ export const getBankDetails = async(req: Request, res: Response): Promise<any>=>
 
 export const initiatePayment = async (req: Request, res: Response): Promise<any> => {
     try {
-        const {email, amount, subaccount} = req.body;
+        const {email, amount, subaccount, metadata} = req.body;
       const response = await axios.post(
         `${process.env.PAYSTACK_API}/transaction/initialize`,
         {
           email,
           amount, // Amount in kobo (₦5000)
           subaccount, // Subaccount code from step 1
-          bearer: 'subaccount', // Specify who bears the Paystack fee
+          bearer: 'subaccount',
+          metadata // Specify who bears the Paystack fee
         },
         {
           headers: {
