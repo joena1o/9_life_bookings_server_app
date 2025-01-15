@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as UserController from '../controllers/user_auth.controller';
 import authenticateToken from "../middleware/authenticate_token";
-import { auth } from "firebase-admin";
+import * as OrderController from '../controllers/orders.controller';
 
 const router = Router();
 
@@ -24,5 +24,7 @@ router.post("/confirm-password-otp", authenticateToken, UserController.confirmPa
 router.patch("/reset-password", authenticateToken, UserController.resetPassword);
 //Change Password
 router.patch("/change-password", authenticateToken, UserController.changePassword);
+//User's Order
+router.get("/orders", authenticateToken, OrderController.fetchCustomerOrders);
 
 export default router;

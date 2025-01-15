@@ -45,6 +45,32 @@ export const getProducts = async (req: Request, res: Response): Promise<any> => 
     }
 }
 
+
+export const getProduct = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const accessToken = decodeToken(req.headers.authorization!);
+        if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
+            const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
+            const user_id = payload.userId;
+            const {id} = req.params;
+            // Fetch all products
+            const product = await ProductModel.findById(id).populate("user_id").sort({ createdAt: -1 }).lean();
+            // Fetch all bookmarks for the user
+            const bookmarks = await bookMarkedModel.find({ user_id }).lean();
+            const bookmarkedProductIds = bookmarks.map(bookmark => bookmark.product_id);
+            // Add `isBookmarked` field to products
+            const productsWithBookmarkInfo = {
+                ...product,
+                isBookmarked: bookmarkedProductIds.includes(product!._id.toString())
+            };
+            return res.status(200).json({ data: productsWithBookmarkInfo });
+        }
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Failed to fetch products" });
+    }
+}
+
 export const searchAndFilterProducts = async (req: Request, res: Response): Promise<any> => {
     try {
         const accessToken = decodeToken(req.headers.authorization!);
