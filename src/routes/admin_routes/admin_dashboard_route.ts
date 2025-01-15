@@ -6,5 +6,6 @@ import checkIfAdmin from '../../middleware/validate_admin';
 const router = Router();
 
 router.get("/count", authenticateToken, checkIfAdmin, DashboardController.numberCounts);
+router.get("/orders", authenticateToken, checkIfAdmin, DashboardController.fetchCustomersOrders);
 
 export default router;
