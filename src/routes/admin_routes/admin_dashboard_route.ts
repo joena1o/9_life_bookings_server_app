@@ -7,5 +7,6 @@ const router = Router();
 
 router.get("/count", authenticateToken, checkIfAdmin, DashboardController.numberCounts);
 router.get("/orders", authenticateToken, checkIfAdmin, DashboardController.fetchCustomersOrders);
+router.get("/sales-by-week", authenticateToken, checkIfAdmin, DashboardController.fetchSalesChartReport);
 
 export default router;
