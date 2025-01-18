@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendWelcomeEmail(_to:string, _subject:string, name:string){
   const mailOptions = {
-    from: process.env.EMAIL_ADDRESS,
+    from: `9Life Team <${process.env.EMAIL_ADDRESS}>`,
     to: _to,
     subject: _subject,
     html: welcomeTemplate(name)
@@ -30,7 +30,7 @@ async function sendWelcomeEmail(_to:string, _subject:string, name:string){
 
 async function sendEmail(_to:string, title:string, content: string){
   const mailOptions = {
-    from: process.env.EMAIL_ADDRESS,
+    from: `9Life Team <${process.env.EMAIL_ADDRESS}>`,
     to: _to,
     subject: title,
     html: emailDefaultTemplete(title, content)
@@ -47,7 +47,7 @@ async function sendEmail(_to:string, title:string, content: string){
 
 async function sendAdAlertEmail(_to:string, _subject:string, mail:string){
   const mailOptions = {
-    from: process.env.EMAIL_ADDRESS,
+    from: `9Life Team <${process.env.EMAIL_ADDRESS}>`,
     to: _to,
     subject: _subject,
     html: adAlertTemplate(mail)
@@ -64,7 +64,7 @@ async function sendAdAlertEmail(_to:string, _subject:string, mail:string){
 
 async function sendEmailOtp(_to:string, _subject:string, otp:number){
   const mailOptions = {
-    from: process.env.EMAIL_ADDRESS,
+    from: `9Life Team <${process.env.EMAIL_ADDRESS}>`,
     to: _to,
     subject: _subject,
     html: otpTemplate(otp, _to)
@@ -81,7 +81,7 @@ async function sendEmailOtp(_to:string, _subject:string, otp:number){
 
 async function sendVerifyEmailOtp(_to:string, _subject:string, otp:number, user:string){
   const mailOptions = {
-    from: process.env.EMAIL_ADDRESS,
+    from: `9Life Team <${process.env.EMAIL_ADDRESS}>`,
     to: _to,
     subject: _subject,
     html: verifyEmailTemplate(otp, _to, user)
