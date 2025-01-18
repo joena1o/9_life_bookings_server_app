@@ -7,6 +7,7 @@ import * as  CustomerController from '../../controllers/admin_controller/custome
 const router = Router();
 
 router.get("/", authenticateToken, checkIfAdmin, CustomerController.fetchCustomers);
-
+router.patch("/suspend", authenticateToken, checkIfAdmin, CustomerController.suspendUser);
+router.post("/email", authenticateToken, checkIfAdmin, CustomerController.sendUserAnEmail);
 
 export default router;
