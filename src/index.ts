@@ -9,6 +9,7 @@ import BookmarkRoute from './routes/bookmark.route';
 import BankingDetailsRoute  from './routes/bank_account.route';
 import AdminCustomerRoute from './routes/admin_routes/admin_customer_route';
 import AdminDashboardRoute from './routes/admin_routes/admin_dashboard_route';
+import AdminProductRoute from './routes/admin_routes/admin_product_route';
 import { createHmac } from 'crypto';
 import dotenv from 'dotenv';
 import OrderModel from './models/order_model';
@@ -35,6 +36,7 @@ app.use("/banking", BankingDetailsRoute);
 //Admin Routes
 app.use("/admin/customers", AdminCustomerRoute);
 app.use("/admin/dashboard", AdminDashboardRoute);
+app.use("/admin/product", AdminProductRoute);
 
 
 app.post('/webhook', async (req: Request, res: Response) => {

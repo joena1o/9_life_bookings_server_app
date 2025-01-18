@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { welcomeTemplate, otpTemplate, adAlertTemplate, verifyEmailTemplate } from './email_templates';
+import { welcomeTemplate, otpTemplate, adAlertTemplate, verifyEmailTemplate, emailDefaultTemplete } from './email_templates';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,6 +17,23 @@ async function sendWelcomeEmail(_to:string, _subject:string, name:string){
     to: _to,
     subject: _subject,
     html: welcomeTemplate(name)
+  };
+  // Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+    } else {
+      console.log('Email sent:', info.response);
+    }
+  });
+}
+
+async function sendEmail(_to:string, title:string, content: string){
+  const mailOptions = {
+    from: process.env.EMAIL_ADDRESS,
+    to: _to,
+    subject: title,
+    html: emailDefaultTemplete(title, content)
   };
   // Send the email
   transporter.sendMail(mailOptions, (error, info) => {
@@ -79,4 +96,4 @@ async function sendVerifyEmailOtp(_to:string, _subject:string, otp:number, user:
   });
 }
 
-export {sendWelcomeEmail, sendEmailOtp, sendAdAlertEmail, sendVerifyEmailOtp}
+export {sendWelcomeEmail, sendEmailOtp, sendEmail, sendAdAlertEmail, sendVerifyEmailOtp}

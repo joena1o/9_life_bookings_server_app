@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   privileges: {type: String, default: "user"},
   emailVerified: {type: Boolean, default: false}, 
   phoneNumber: {type: Boolean, default: false}, 
+  suspended: {type: Boolean, default: false},
   profile: {
     address: {type: String, default: null},
     dateOfBirth: {type: String, default: null},

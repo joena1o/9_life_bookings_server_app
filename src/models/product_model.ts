@@ -13,6 +13,7 @@ const ProductSchema = new mongoose.Schema({
   quantity: {type: Number, required: true, default: 1},
   kitchenAccess: {type: Boolean, default: false},
   availability: {type: Boolean, required: true, default: false},
+  delisted: {type: Boolean, default: false},
   type:{
     type: String,
     enum: ['Residential', 'Commercial', 'Land', 'Hospitality', 'Industrial', 'Specialty'],

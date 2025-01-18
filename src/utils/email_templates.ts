@@ -118,6 +118,116 @@ function welcomeTemplate(to:string){
 ` 
 }
 
+
+function emailDefaultTemplete(title:string, content:string){
+  return `<!DOCTYPE html>
+  <html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: #58B84F;
+        padding: 20px;
+        text-align: center;
+        color: #ffffff;
+      }
+       .header h1{
+       color: #ffffff;
+       } 
+      .header img {
+        max-width: 150px;
+        margin-bottom: 10px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .content h1 {
+        color: #0073e6;
+        font-size: 24px;
+      }
+      .content p {
+        margin: 10px 0;
+      }
+      .features {
+        margin: 20px 0;
+        padding-left: 20px;
+      }
+      .features li {
+        margin-bottom: 10px;
+      }
+      .cta {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .cta a {
+        background-color: #0073e6;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      .cta a:hover {
+        background-color: #005bb5;
+      }
+      .footer {
+        background-color: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+      }
+      .footer a {
+        color: #0073e6;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header">
+        <img src="https://res.cloudinary.com/dpuaqijz4/image/upload/v1736262358/qw9z2czrktzkwno8k8fu.png" alt="9LifeBookings Logo">
+      </div>
+      <!-- Content Section -->
+      <div class="content">
+        <p>
+        ${content}
+        </p>
+        <p>
+          If you have any questions or need assistance, feel free to contact us at <a href="mailto:support@9lifebookings.com">support@9lifebookings.com</a>.
+        </p>
+        <p>Thank you for choosing 9LifeBookings. We can’t wait to be a part of your travel journey!</p>
+      </div>
+      <!-- Footer Section -->
+      <div class="footer">
+        <p>Warm regards,<br>The 9LifeBookings Team</p>
+        <p><a href="https://9lifebookings.com" target="_blank">Visit our website</a> | <a href="mailto:support@9lifebookings.com">Contact Support</a></p>
+      </div>
+    </div>
+  </body>
+  </html>
+ ` 
+ }
+
 function otpTemplate(otp:number, email: string){
   return `<!DOCTYPE html>
   <html>
@@ -223,4 +333,4 @@ function adAlertTemplate(mail:string){
   `; 
 }
 
-export {welcomeTemplate, otpTemplate as otpTemplate, adAlertTemplate, verifyEmailTemplate};
+export {welcomeTemplate, otpTemplate as otpTemplate, emailDefaultTemplete, adAlertTemplate, verifyEmailTemplate};
