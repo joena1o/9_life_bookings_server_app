@@ -12,17 +12,20 @@ const ProductSchema = new mongoose.Schema({
   user_id: {type: String, required: true, ref: "user"},
   quantity: {type: Number, required: true, default: 1},
   kitchenAccess: {type: Boolean, default: false},
-  availability: {type: Boolean, required: true, default: false},
+  availability: {type: Number, default: 7},
   delisted: {type: Boolean, default: false},
+  approved: {type: Boolean, default: false},
   type:{
     type: String,
     enum: ['Residential', 'Commercial', 'Land', 'Hospitality', 'Industrial', 'Specialty'],
     required: true
   },
   category: {type: String, required: true},
+  approvedBy: {type: String, default: null},
   //location: {type: [Number], required: true},
   price: {type: Number, required: true},
   rent: {type: Boolean, default: false},
+  durationType: {type: String, default: null},
   Duration: {type: Number, default: null},
 }, { timestamps: true });
 
