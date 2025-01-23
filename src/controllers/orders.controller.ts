@@ -10,7 +10,7 @@ export const fetchCustomerOrders = async (req: Request, res: Response): Promise<
         if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
-        const letOrders = await OrderModel.find({userId: user_id}).populate("productId").populate("userId");
+        const letOrders = await OrderModel.find({userId: user_id}).populate("productId").populate("userId").sort({ createdAt: -1 });
         return res.status(200).json({data: letOrders});
     } 
     }catch(err){
