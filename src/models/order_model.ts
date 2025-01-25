@@ -15,6 +15,14 @@ const orderSchema = new mongoose.Schema({
     required: true,
     ref: "product"
   },
+  startBookingDate: {
+    type: String,
+    required: true,
+  },
+  endBookingDate: {
+    type: String,
+    required: true,
+  },
   quantity: {
     type: Number,
     required: true,
