@@ -15,7 +15,7 @@ dotenv.config();
 const jwtSecret: any = process.env.JWT_SECRET;
 
 export const createUserManualSignUp = async (req: Request, res: Response): Promise<any> => {
-  const { email, password, firstName, picture, lastName, referralCode } = req.body;
+  const { email, password, firstName, picture, lastName, referralCode, privileges } = req.body;
   try {
     let user = await UserModel.findOne({ email: email });
     if (user) {
@@ -26,6 +26,7 @@ export const createUserManualSignUp = async (req: Request, res: Response): Promi
       firstName,
       lastName,
       email,
+      privileges,
       password: hashedPassword,
       picture,
       referralCode,
@@ -45,7 +46,7 @@ export const createUserManualSignUp = async (req: Request, res: Response): Promi
 };
 
 export const createUserGoogleSignUp = async (req: Request, res: Response): Promise<any> => {
-  const { email, googleId, firstName, picture, lastName, referralCode } = req.body;
+  const { email, googleId, firstName, picture, lastName, referralCode, privileges } = req.body;
   try {
     let user = await UserModel.findOne({ email: email });
     if (user) {
@@ -57,6 +58,7 @@ export const createUserGoogleSignUp = async (req: Request, res: Response): Promi
       lastName,
       email,
       googleId: hashedgoogleId,
+      privileges,
       picture,
       referralCode,
     });
