@@ -14,7 +14,7 @@ const ProductSchema = new mongoose.Schema({
   kitchenAccess: {type: Boolean, default: false},
   availability: {type: Number, default: 7},
   delisted: {type: Boolean, default: false},
-  approved: {type: Boolean, default: false},
+  approved: {type: Boolean, default: null},
   type:{
     type: String,
     enum: ['Residential', 'Commercial', 'Land', 'Hospitality', 'Industrial', 'Specialty'],
