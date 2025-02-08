@@ -9,7 +9,6 @@ import { sendEmailOtp, sendVerifyEmailOtp, sendWelcomeEmail } from "../utils/ema
 import { sendOtp, verifyOtp } from '../utils/sms_request';
 import { decodeToken } from "../utils/jwt_service";
 import forgotPasswordModel from "../models/forgot_password_model";
-import { sendNotificationToUser } from "../utils/push_notification_util";
 
 dotenv.config();
 const jwtSecret: any = process.env.JWT_SECRET;
@@ -96,11 +95,6 @@ export const LoginUser = async (req: Request, res: Response): Promise<any> => {
         return res.status(400).json({ error: "Invalid Login credentials" });
       }
       const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
-      sendNotificationToUser(
-        "Welcome Back to 9LifeBookings!",
-        `Hi ${user.firstName}, we're thrilled to have you back. Let's make your experience amazing! 🚀`,
-        user._id.toString()
-      );
       return res.status(200).json({ data: user, message: "Login successful", token });
     }
   } catch (error) {
@@ -127,11 +121,6 @@ export const LoginUserGoogle = async (req: Request, res: Response): Promise<any>
         return res.status(400).json({ error: "Invalid Login credentials" });
       }
       const token = jwt.sign({ userId: user._id, name: user.firstName }, jwtSecret);
-      // sendNotificationToUser(
-      //   "Welcome Back to 9LifeBookings!",
-      //   `Hi ${user.firstName}, we're thrilled to have you back. Let's make your experience amazing! 🚀`,
-      //   user._id.toString()
-      // );
       return res.status(200).json({ data: user, message: "Login successful", token });
     }
   } catch (error) {

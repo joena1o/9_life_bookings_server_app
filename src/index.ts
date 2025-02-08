@@ -68,8 +68,7 @@ app.post('/webhook', async (req: Request, res: Response) => {
       console.log('Transaction successful:', transactionData);
       const { metadata, amount } = transactionData;
       if (metadata) {
-        const { merchantId, userId, productId, quantity, user, startBookingDate, endBookingDate, merchantName, note } = metadata;
-        console.log(`Merchant ID: ${merchantId}, User ID: ${userId}, Order ID: ${productId}`);
+        const { merchantId, userId, productId, quantity, user, purchaseType, startBookingDate, endBookingDate, merchantName, note } = metadata;
         let submitOrder = await OrderModel.create({
           merchantId,
           userId,
@@ -78,7 +77,8 @@ app.post('/webhook', async (req: Request, res: Response) => {
           note,
           quantity,
           startBookingDate,
-          endBookingDate
+          endBookingDate,
+          purchaseType
         });
         if(submitOrder){
           sendNotificationToUser(
@@ -93,8 +93,6 @@ app.post('/webhook', async (req: Request, res: Response) => {
           );
         }
       } // Perform necessary actions:
-    }else{
-      
     }
     // Acknowledge the webhook event
     res.status(200).send('Webhook received');

@@ -10,6 +10,11 @@ const orderSchema = new mongoose.Schema({
     required: true,
     ref: "user"
   },
+  purchaseType: {
+    type: String,
+    required: true,
+    enum: ['purchase', 'booking'],
+  },
   productId: {
     type: String,
     required: true,
@@ -18,10 +23,12 @@ const orderSchema = new mongoose.Schema({
   startBookingDate: {
     type: String,
     required: true,
+    default: null
   },
   endBookingDate: {
     type: String,
     required: true,
+    default: null
   },
   quantity: {
     type: Number,
@@ -35,8 +42,6 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
-
 }, {timestamps: true});
 
 const OrderModel = mongoose.model("order", orderSchema);
