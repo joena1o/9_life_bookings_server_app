@@ -7,6 +7,7 @@ const ProductSchema = new mongoose.Schema({
   bedrooms: {type: Number, required: true},
   toilets: {type: Number, required: true, default: 0},
   parkingSpace: {type: Number, required: true, default: 0},
+  isAvailable: {type: Boolean, required: true, default: true},
   landArea: {type: Number, required: true},
   images: {type: [String], required: true},
   user_id: {type: String, required: true, ref: "user"},
@@ -22,7 +23,11 @@ const ProductSchema = new mongoose.Schema({
   },
   category: {type: String, required: true},
   approvedBy: {type: String, default: null},
-  //location: {type: [Number], required: true},
+  location: {
+    type: { type: String, enum: ["Point"], required: true },
+    coordinates: { type: [Number], required: true }, // [longitude, latitude]
+  },
+  address: {type: String, required: true},
   price: {type: Number, required: true},
   rent: {type: Boolean, default: false},
   durationType: {type: String, default: null},
