@@ -107,8 +107,8 @@ export const initiatePayment = async (req: Request, res: Response): Promise<any>
         {
           email,
           amount, // Amount in kobo (₦5000)
-          subaccount, // Subaccount code from step 1
-          bearer: 'subaccount',
+          //subaccount, // Subaccount code from step 1
+          //bearer: 'subaccount',
           metadata // Specify who bears the Paystack fee
         },
         {

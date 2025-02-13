@@ -15,6 +15,7 @@ import { createHmac } from 'crypto';
 import dotenv from 'dotenv';
 import OrderModel from './models/order_model';
 import { sendNotificationToUser } from './utils/push_notification_util';
+import ProductModel from './models/product_model';
 dotenv.config();
 
 const app = express();
@@ -81,6 +82,7 @@ app.post('/webhook', async (req: Request, res: Response) => {
           purchaseType
         });
         if(submitOrder){
+        await ProductModel.findOneAndUpdate({ _id: productId, quantity: { $gte: quantity } }, { $inc: { quantity: -quantity }});
           sendNotificationToUser(
             "Your property has been bought",
             `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
