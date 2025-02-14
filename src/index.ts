@@ -82,7 +82,7 @@ app.post('/webhook', async (req: Request, res: Response) => {
           purchaseType
         });
         if(submitOrder){
-        await ProductModel.findOneAndUpdate({ _id: productId, quantity: { $gte: quantity } }, { $inc: { quantity: -quantity }});
+        await ProductModel.findOneAndUpdate({ _id: productId, rentedQuantity: { $gte: quantity } }, { $inc: { rentedQuantity: quantity }});
           sendNotificationToUser(
             "Your property has been bought",
             `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,

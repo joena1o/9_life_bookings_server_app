@@ -30,6 +30,12 @@ const ProductSchema = new mongoose.Schema({
   address: {type: String, required: true},
   price: {type: Number, required: true},
   rent: {type: Boolean, default: false},
+  rentedQuantity: { type: Number, default: 0 }, // Rented units
+  rentStatus: { 
+    type: String, 
+    enum: ["available", "rented", "reserved"], 
+    default: "available"
+  },
   durationType: {type: String, default: null},
   Duration: {type: Number, default: null},
 }, { timestamps: true });
