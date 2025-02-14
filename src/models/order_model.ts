@@ -22,12 +22,10 @@ const orderSchema = new mongoose.Schema({
   },
   startBookingDate: {
     type: String,
-    required: true,
     default: null
   },
   endBookingDate: {
     type: String,
-    required: true,
     default: null
   },
   quantity: {
