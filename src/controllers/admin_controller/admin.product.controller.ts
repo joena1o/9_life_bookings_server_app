@@ -36,7 +36,7 @@ export const fetchingPendingProducts = async(req: Request,res: Response):Promise
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
             // Fetch all products
-            const products = await ProductModel.find({approved: null}).populate("user_id").sort({ createdAt: -1 }).lean();
+            const products = await ProductModel.find().populate("user_id").sort({ createdAt: -1 }).lean();
             // Fetch all bookmarks for the user
             const bookmarks = await bookMarkedModel.find({ user_id }).lean();
             const bookmarkedProductIds = bookmarks.map(bookmark => bookmark.product_id);

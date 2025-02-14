@@ -82,6 +82,9 @@ export const LoginUser = async (req: Request, res: Response): Promise<any> => {
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
+    if(user.suspended == true){
+      return res.status(400).json({ error: "Your account has been suspend, Please contact services" });
+    }
     if (user.googleId && !user.password) {
       return res
         .status(400)
@@ -108,6 +111,9 @@ export const LoginUserGoogle = async (req: Request, res: Response): Promise<any>
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(400).json({ error: "Invalid credentials" });
+    }
+    if(user.suspended == true){
+      return res.status(400).json({ error: "Your account has been suspend, Please contact service" });
     }
     if (!user.googleId && user.password) {
       return res
