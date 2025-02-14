@@ -4,6 +4,7 @@ import RatingModel from "../models/rating_,model";
 import UserModel from "../models/user_model";
 import { sendNotificationToUser } from "../utils/push_notification_util";
 import ProductModel from "../models/product_model";
+import notificationModel from "../models/notification_model";
 
 
 export const addRating = async (req: Request, res: Response): Promise<any> => {
@@ -24,6 +25,14 @@ export const addRating = async (req: Request, res: Response): Promise<any> => {
                     creatorUserId.toString(),
                     product.images[0]
                   );
+                  await notificationModel.create({
+                    user_id:  userId.toString(),
+                    product_id: postId,
+                    noticeType: 'review',
+                    message:  `${reviewer.firstName} ${reviewer.lastName} just left a ${rating}⭐️ review! 🎉\n\n💬 ${review}`,
+                    title:  `New review dropped`,
+                    extra: creatorUserId
+                  });
             }
             return res
                 .status(201)

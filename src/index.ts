@@ -4,6 +4,7 @@ import connectToDb from './database/db';
 import ImageRoute from './routes/image.route';
 import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.routes';
+import NotificationRoute from './routes/notification.routes';
 import RatingRoute from './routes/rating.route';
 import BookmarkRoute from './routes/bookmark.route';
 import BankingDetailsRoute  from './routes/bank_account.route';
@@ -16,6 +17,7 @@ import dotenv from 'dotenv';
 import OrderModel from './models/order_model';
 import { sendNotificationToUser } from './utils/push_notification_util';
 import ProductModel from './models/product_model';
+import notificationModel from './models/notification_model';
 dotenv.config();
 
 const app = express();
@@ -34,6 +36,7 @@ app.use("/product", ProductRoute);
 app.use("/rating", RatingRoute);
 app.use("/bookmark", BookmarkRoute);
 app.use("/banking", BankingDetailsRoute);
+app.use("/notifications", NotificationRoute);
 
 //Admin Routes
 app.use("/admin", AdminAuthRoute);
@@ -93,6 +96,20 @@ app.post('/webhook', async (req: Request, res: Response) => {
             `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
             userId.toString()
           );
+          await notificationModel.create({
+            user_id:  merchantId.toString(),
+            product_id: productId,
+            noticeType: 'sale',
+            message: `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
+            title:  "Your property has been bought",
+          });
+          await notificationModel.create({
+            user_id:  userId.toString(),
+            product_id: productId,
+            noticeType: 'purchase',
+            message:  `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
+            title:  "Your payment has been confirmed",
+          });
         }
       } // Perform necessary actions:
     }
