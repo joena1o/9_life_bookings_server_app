@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
  merchantId: {
     type: String,
-    required: true
+    required: true,
+    ref: "user"
   },  
   userId: {
     type: String,
@@ -21,11 +22,11 @@ const orderSchema = new mongoose.Schema({
     ref: "product"
   },
   startBookingDate: {
-    type: String,
+    type: Date,
     default: null
   },
   endBookingDate: {
-    type: String,
+    type: Date,
     default: null
   },
   quantity: {

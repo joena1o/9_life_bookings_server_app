@@ -79,7 +79,7 @@ export const searchAndFilterProducts = async (req: Request, res: Response): Prom
             const user_id = payload.userId;
 
             // Extract query parameters for search and filtering
-            const { search, category, type, minPrice, maxPrice, sortBy } = req.query;
+            const { search, category, type, minPrice, maxPrice, sortBy, address } = req.query;
 
             // Build the query object dynamically
             const query: any = {};
@@ -92,7 +92,11 @@ export const searchAndFilterProducts = async (req: Request, res: Response): Prom
             }
 
             if (category) {
-                query.category = category;
+                query.type = category;
+            }
+
+            if(address){
+                query.address = address;
             }
 
             if(type){
@@ -102,7 +106,7 @@ export const searchAndFilterProducts = async (req: Request, res: Response): Prom
             if (minPrice || maxPrice) {
                 query.price = {};
                 if (minPrice) query.price.$gte = parseFloat(minPrice as string);
-                if (maxPrice) query.price.$lte = parseFloat(maxPrice as string);
+                if (maxPrice && maxPrice != null) query.price.$lte = parseFloat(maxPrice as string);
             }
 
             // Fetch products based on query

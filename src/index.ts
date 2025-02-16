@@ -12,12 +12,15 @@ import AdminCustomerRoute from './routes/admin_routes/admin_customer_route';
 import AdminDashboardRoute from './routes/admin_routes/admin_dashboard_route';
 import AdminProductRoute from './routes/admin_routes/admin_product_route';
 import AdminAuthRoute from './routes/admin_routes/admin_auth_route';
+import AdminOrderRoute from './routes/admin_routes/admin_order_route';
 import { createHmac } from 'crypto';
 import dotenv from 'dotenv';
 import OrderModel from './models/order_model';
 import { sendNotificationToUser } from './utils/push_notification_util';
 import ProductModel from './models/product_model';
 import notificationModel from './models/notification_model';
+import authenticateToken from './middleware/authenticate_token';
+import checkIfAdmin from './middleware/validate_admin';
 dotenv.config();
 
 const app = express();
@@ -43,6 +46,7 @@ app.use("/admin", AdminAuthRoute);
 app.use("/admin/customers", AdminCustomerRoute);
 app.use("/admin/dashboard", AdminDashboardRoute);
 app.use("/admin/product", AdminProductRoute);
+app.use("/admin/sales", authenticateToken, checkIfAdmin, AdminOrderRoute);
 
 
 app.post('/webhook', async (req: Request, res: Response) => {
