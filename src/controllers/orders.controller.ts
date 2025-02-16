@@ -2,6 +2,7 @@ import OrderModel from "../models/order_model";
 import {Response, Request} from 'express';
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
+import moment from "moment-timezone";
 
 
 export const fetchCustomerOrders = async (req: Request, res: Response): Promise<any> =>{
@@ -26,7 +27,16 @@ export const getBookingAvailability = async (req: Request, res: Response): Promi
         productId,
         purchaseType: "booking",
       });
-      return res.status(200).json({data: bookings});
+      const formattedBookings = bookings.map((booking) => ({
+        ...booking.toObject(),
+        startBookingDate: booking.startBookingDate
+          ? moment(booking.startBookingDate).tz("Africa/Lagos").format()
+          : null,
+        endBookingDate: booking.endBookingDate
+          ? moment(booking.endBookingDate).tz("Africa/Lagos").format()
+          : null,
+      }));
+      return res.status(200).json({ data: formattedBookings });
     } catch (error) {
      return res.status(500).json({error: error});
     }
