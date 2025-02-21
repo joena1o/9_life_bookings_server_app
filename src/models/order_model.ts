@@ -84,6 +84,7 @@ orderSchema.pre<IOrder>("save", function (next) {
   next();
 });
 
+
 // Instance method to decrypt disbursed field
 orderSchema.methods.getDecryptedDisbursed = function (): string {
   return decrypt(this.disbursed);
