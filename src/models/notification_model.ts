@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema({
   },
   noticeType: {
     type: String,
-    enum: ['notice','purchase','sale','review'],
+    enum: ['notice','purchase','sale', 'review', 'admin'],
     default: "notice"
   },
   title: {

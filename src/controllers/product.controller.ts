@@ -4,12 +4,20 @@ import mongoose from "mongoose";
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
 import bookMarkedModel from "../models/bookmark_model";
+import notificationModel from "../models/notification_model";
 
 
 export const addProduct = async (req: Request, res: Response): Promise<any> => {
     try {
         let product = await ProductModel.create(req.body);
         if (product) {
+            await notificationModel.create({
+                user_id:  product.user_id,
+                product_id: product._id,
+                noticeType: 'admin',
+                message: `Hi Admin, A new property has been upload. click here to review or go to properties tab to inspect`,
+                title:  "A new property has been Upload",
+              });
             return res
                 .status(201)
                 .json({ added: true, message: "Product Uploaded Successfully" });
