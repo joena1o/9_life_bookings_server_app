@@ -77,7 +77,7 @@ app.post('/webhook', async (req: Request, res: Response) => {
       const { metadata, amount } = transactionData;
       if (metadata) {
         const { merchantId, userId, productId, quantity, user, purchaseType, startBookingDate, endBookingDate, merchantName, note } = metadata;
-        let submitOrder = await OrderModel.create({
+        let submitOrder = new OrderModel({
           merchantId,
           userId,
           productId,
@@ -88,6 +88,7 @@ app.post('/webhook', async (req: Request, res: Response) => {
           endBookingDate,
           purchaseType
         });
+        await submitOrder.save(); // Middleware will encrypt "disbursed"
         if(submitOrder){
         await ProductModel.findOneAndUpdate({ _id: productId, quantity: { $gte: quantity } }, { $inc: { rentedQuantity: quantity, quantity: -quantity}});
           sendNotificationToUser(
