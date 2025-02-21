@@ -76,7 +76,9 @@ const orderSchema = new Schema<IOrder>(
 
 // Middleware to encrypt before saving
 orderSchema.pre<IOrder>("save", function (next) {
-  if (this.isModified("disbursed")) {
+  if (!this.disbursed) {
+    this.disbursed = encrypt("No"); // Encrypt default before saving
+  } else if (this.isModified("disbursed")) {
     this.disbursed = encrypt(this.disbursed);
   }
   next();
