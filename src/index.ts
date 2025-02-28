@@ -48,7 +48,6 @@ app.use("/admin/dashboard", AdminDashboardRoute);
 app.use("/admin/product", AdminProductRoute);
 app.use("/admin/sales", authenticateToken, checkIfAdmin, AdminOrderRoute);
 
-
 app.post('/webhook', async (req: Request, res: Response) => {
   try {
     // Retrieve the Paystack signature from headers

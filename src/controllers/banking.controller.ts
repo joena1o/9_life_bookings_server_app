@@ -1,11 +1,13 @@
-import bank_details_model from "../models/bank_details_model";
 import { Request, Response } from 'express';
-import { createPayStackAccount, updatePayStackAccount } from "../utils/create_paystack_sub_account";
+import { createReceiptCode, disburseFund, finalizePaystackTransfer } from "../utils/create_paystack_sub_account";
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
 import UserModel from "../models/user_model";
 import axios from "axios";
 import ProductModel from "../models/product_model";
+import RecipientModel from "../models/recipient_model";
+import TransferDetailsModel from "../models/transfer_details_model";
+import OrderModel from '../models/order_model';
 
 export const addBankDetails = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -17,21 +19,22 @@ export const addBankDetails = async (req: Request, res: Response): Promise<any> 
                 business_name,
                 bank_code,
                 account_number,
-                percentage_charge,
             } = req.body;
-            let createData = await createPayStackAccount(
-                business_name, bank_code, account_number, percentage_charge,
+            let createData = await createReceiptCode(
+                business_name, bank_code, account_number,
             );
+            console.log(createData);
             if (createData.status) {
-                let accountDetails = await bank_details_model.create({
+                let accountDetails = await RecipientModel.create({
                     ...createData.data,
-                    user_id
+                    user_id,
+                    business_name
                 });
                 if (accountDetails) {
                     await UserModel.findByIdAndUpdate(user_id, {
                         $set: {
-                            account_id: accountDetails?._id!.toString(),
-                            sub_account: accountDetails?.subaccount_code
+                            account_id: accountDetails?.id.toString(),
+                            sub_account: accountDetails?.recipient_code
                         }
                     },)
                     return res
@@ -49,6 +52,64 @@ export const addBankDetails = async (req: Request, res: Response): Promise<any> 
     }
 }
 
+export const initiateDisburseUsersFunds = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const {
+            reason,
+            amount,
+            reference,
+            recipient,
+        } = req.body;
+        let disburseResult = await disburseFund(reason, amount, reference, recipient);
+        if (disburseResult.status) {
+            return res
+                .status(201)
+                .json({ data: disburseResult, message: disburseResult.status });
+        } else {
+            return res.status(400).json({ error: "An Error Occured while processing your request" });
+        }
+
+    } catch (err) {
+        return res.status(500).json({ error: err });
+    }
+}
+
+export const finalizeDisburseUsersFunds = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const accessToken = decodeToken(req.headers.authorization!);
+        if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
+            const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
+            const user_id = payload.userId;
+        const {
+            transfer_code,
+            otp,
+            userId,
+            orderId,
+        } = req.body;
+        let disburseResult = await finalizePaystackTransfer(transfer_code, otp);
+        console.log(disburseResult);
+        if (disburseResult.status) {
+            await OrderModel.findOneAndUpdate({_id: orderId}, {
+                    disbursed: disburseResult.message,
+            });
+            let transferDetails = await TransferDetailsModel.create({
+                ...disburseResult,
+                user_id: userId,
+                disbursedBy: user_id,
+                orderId
+            });
+            return res
+                .status(201)
+                .json({ data: transferDetails, message: disburseResult.message });
+        } else {
+            return res.status(400).json({ error: "An Error Occured while processing your request" });
+        }
+    }
+    } catch (err) {
+        return res.status(500).json({ error: err });
+    }
+}
+
 
 export const updateAccountDetails = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -60,22 +121,20 @@ export const updateAccountDetails = async (req: Request, res: Response): Promise
                 business_name,
                 bank_code,
                 account_number,
-                percentage_charge,
-                sub_account
             } = req.body;
-            let createData = await updatePayStackAccount(
-                business_name, bank_code, account_number, percentage_charge, sub_account
+            let createData = await createReceiptCode(
+                business_name, bank_code, account_number,
             );
             if (createData.status) {
-                let accountDetails = await bank_details_model.findOneAndUpdate({ user_id }, {
+                let accountDetails = await RecipientModel.findOneAndUpdate({ user_id }, {
                     ...createData.data,
                     user_id
                 }, { new: true });
                 if (accountDetails) {
                     await UserModel.findByIdAndUpdate(user_id, {
                         $set: {
-                            account_id: accountDetails?._id!.toString(),
-                            sub_account: accountDetails?.subaccount_code
+                            account_id: accountDetails?.id.toString(),
+                            sub_account: accountDetails?.recipient_code
                         }
                     },)
                     return res
@@ -100,7 +159,7 @@ export const getBankDetails = async (req: Request, res: Response): Promise<any> 
         if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
-            const fetchDetails = await bank_details_model.find({ user_id });
+            const fetchDetails = await RecipientModel.find({ user_id });
             return res.status(200).json({ data: fetchDetails });
         }
     } catch (err) {
@@ -111,7 +170,7 @@ export const getBankDetails = async (req: Request, res: Response): Promise<any> 
 export const initiatePayment = async (req: Request, res: Response): Promise<any> => {
     try {
         const { email, amount, metadata } = req.body;
-        const {productId, quantity} =  metadata;
+        const { productId, quantity } = metadata;
         const checkItemAvailabilty = await ProductModel.findOne({ _id: productId, quantity: { $gte: quantity } });
         if (checkItemAvailabilty) {
             const response = await axios.post(
