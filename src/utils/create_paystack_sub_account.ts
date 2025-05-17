@@ -43,7 +43,6 @@ export const createReceiptCode = async (business_name: string, bank_code: string
             reference,
             recipient,
           };
-        
           const options: AxiosRequestConfig = {
             method: "POST",
             url: `${process.env.PAYSTACK_API}/transfer`,
