@@ -90,8 +90,10 @@ export const searchAndFilterProducts = async (req: Request, res: Response): Prom
             const { search, category, type, minPrice, maxPrice, sortBy, address } = req.query;
 
             // Build the query object dynamically
-            const query: any = {};
-
+            const query: any = {
+                approved: true,
+                delisted: false
+            };
             if (search) {
                 query.$or = [
                     { title: { $regex: search, $options: "i" } }, // Case-insensitive match for product name
