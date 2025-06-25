@@ -8,5 +8,6 @@ router.post("/", authenticateToken, BankController.addBankDetails);
 router.get("/", authenticateToken, BankController.getBankDetails);
 router.patch("/", authenticateToken, BankController.updateAccountDetails);
 router.post("/initiate-payment", authenticateToken, BankController.initiatePayment);
+router.get("/get-banks", authenticateToken, BankController.getBankList);
 
 export default router;

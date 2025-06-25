@@ -90,6 +90,25 @@ export const createReceiptCode = async (business_name: string, bank_code: string
     };
 
 
+     export const getBankList = async (): Promise<any> => {
+      const options: AxiosRequestConfig = {
+        method: "GET",
+        url: `${process.env.PAYSTACK_API}/bank`,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
+        },
+      };
+      try {
+        const response = await axios(options);
+        return response.data;
+      } catch (error) {
+          console.log(error);
+        throw new Error(`Error retriving banks: ${error}`);
+      }
+    };
+
+
 //   export const updatePayStackAccount = async (business_name: string, bank_code: string,
 //     account_number: string, percentage_charge: number, sub_account: string
 //     ): Promise<any> => {
