@@ -3,7 +3,7 @@ import { createReceiptCode, disburseFund, finalizePaystackTransfer } from "../ut
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
 import UserModel from "../models/user_model";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import ProductModel from "../models/product_model";
 import RecipientModel from "../models/recipient_model";
 import TransferDetailsModel from "../models/transfer_details_model";
@@ -52,6 +52,27 @@ export const addBankDetails = async (req: Request, res: Response): Promise<any> 
     }
 }
 
+export const getBankList = async (req: Request, res: Response): Promise<any> => {
+    const options: AxiosRequestConfig = {
+        method: "GET",
+        url: `${process.env.PAYSTACK_API}/bank`,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
+        },
+    };
+    try {
+        const response = await axios(options);
+        return res
+            .status(201)
+            .json({ data: response.data, message: "Bank List" });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: `Error retriving banks: ${error}` });
+    }
+};
+
+
 export const initiateDisburseUsersFunds = async (req: Request, res: Response): Promise<any> => {
     try {
         const {
@@ -80,31 +101,31 @@ export const finalizeDisburseUsersFunds = async (req: Request, res: Response): P
         if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
-        const {
-            transfer_code,
-            otp,
-            userId,
-            orderId,
-        } = req.body;
-        let disburseResult = await finalizePaystackTransfer(transfer_code, otp);
-        console.log(disburseResult);
-        if (disburseResult.status) {
-            await OrderModel.findOneAndUpdate({_id: orderId}, {
+            const {
+                transfer_code,
+                otp,
+                userId,
+                orderId,
+            } = req.body;
+            let disburseResult = await finalizePaystackTransfer(transfer_code, otp);
+            console.log(disburseResult);
+            if (disburseResult.status) {
+                await OrderModel.findOneAndUpdate({ _id: orderId }, {
                     disbursed: disburseResult.message,
-            });
-            let transferDetails = await TransferDetailsModel.create({
-                ...disburseResult,
-                user_id: userId,
-                disbursedBy: user_id,
-                orderId
-            });
-            return res
-                .status(201)
-                .json({ data: transferDetails, message: disburseResult.message });
-        } else {
-            return res.status(400).json({ error: "An Error Occured while processing your request" });
+                });
+                let transferDetails = await TransferDetailsModel.create({
+                    ...disburseResult,
+                    user_id: userId,
+                    disbursedBy: user_id,
+                    orderId
+                });
+                return res
+                    .status(201)
+                    .json({ data: transferDetails, message: disburseResult.message });
+            } else {
+                return res.status(400).json({ error: "An Error Occured while processing your request" });
+            }
         }
-    }
     } catch (err) {
         return res.status(500).json({ error: err });
     }
