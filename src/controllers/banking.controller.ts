@@ -142,7 +142,7 @@ export const updateAccountDetails = async (req: Request, res: Response): Promise
                 business_name,
                 bank_code,
                 account_number,
-                recipient_code
+                //recipient_code
             } = req.body;
             let createData = await createReceiptCode(
                 business_name, bank_code, account_number
