@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createReceiptCode, disburseFund, finalizePaystackTransfer, updateReceiptCode } from "../utils/create_paystack_receipants";
+import { createReceiptCode, disburseFund, finalizePaystackTransfer } from "../utils/create_paystack_receipants";
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
 import UserModel from "../models/user_model";
@@ -142,7 +142,6 @@ export const updateAccountDetails = async (req: Request, res: Response): Promise
                 business_name,
                 bank_code,
                 account_number,
-                //recipient_code
             } = req.body;
             let createData = await createReceiptCode(
                 business_name, bank_code, account_number
