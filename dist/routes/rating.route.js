@@ -41,5 +41,6 @@ const authenticate_token_1 = __importDefault(require("../middleware/authenticate
 const RatingController = __importStar(require("../controllers/rating.controller"));
 const router = (0, express_1.Router)();
 router.post("/", authenticate_token_1.default, RatingController.addRating);
+router.get("/", authenticate_token_1.default, RatingController.fetchUserRating);
 router.delete("/", authenticate_token_1.default, RatingController.deleteReview);
 exports.default = router;

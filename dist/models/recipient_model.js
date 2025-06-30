@@ -32,21 +32,32 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const ProductController = __importStar(require("../controllers/product.controller"));
-const orders_controller_1 = require("../controllers/orders.controller");
-const express_1 = require("express");
-const authenticate_token_1 = __importDefault(require("../middleware/authenticate_token"));
-const router = (0, express_1.Router)();
-router.post("/", authenticate_token_1.default, ProductController.addProduct);
-router.get("/", authenticate_token_1.default, ProductController.getProducts);
-router.get('/getBookings/:productId', authenticate_token_1.default, orders_controller_1.getBookingAvailability);
-router.get("/search", authenticate_token_1.default, ProductController.searchAndFilterProducts);
-router.get("/users", authenticate_token_1.default, ProductController.getUsersProducts);
-router.get("/:id", authenticate_token_1.default, ProductController.getProduct);
-router.patch("/", authenticate_token_1.default, ProductController.editProduct);
-router.delete("/", authenticate_token_1.default, ProductController.deleteProduct);
-exports.default = router;
+const mongoose_1 = __importStar(require("mongoose"));
+// Define the schema
+const RecipientSchema = new mongoose_1.Schema({
+    user_id: { type: String, required: true },
+    business_name: { type: String, required: true },
+    //orderId: {type: String, required: true},
+    active: { type: Boolean, required: true },
+    createdAt: { type: Date, required: true },
+    currency: { type: String, required: true },
+    domain: { type: String, required: true },
+    id: { type: Number, required: true, unique: true }, // Paystack's recipient ID
+    integration: { type: Number, required: true },
+    name: { type: String, required: true },
+    recipient_code: { type: String, required: true, unique: true }, // Store recipient_code
+    type: { type: String, required: true },
+    updatedAt: { type: Date, required: true },
+    is_deleted: { type: Boolean, required: true, default: false },
+    details: {
+        authorization_code: { type: String, default: null },
+        account_number: { type: String, required: true },
+        account_name: { type: String, default: null },
+        bank_code: { type: String, required: true },
+        bank_name: { type: String, required: true },
+    },
+}, { timestamps: true });
+// Define and export the model
+const RecipientModel = mongoose_1.default.model("Recipient", RecipientSchema);
+exports.default = RecipientModel;

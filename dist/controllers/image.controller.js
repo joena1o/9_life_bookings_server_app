@@ -20,6 +20,7 @@ const cloudinary_upload = (file, folder) => {
             folder: folder,
         }, (error, result) => {
             if (error) {
+                console.log(`this is the eror ${error.message}`);
                 reject(error);
             }
             else {

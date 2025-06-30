@@ -2,34 +2,235 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.welcomeTemplate = welcomeTemplate;
 exports.otpTemplate = otpTemplate;
+exports.emailDefaultTemplete = emailDefaultTemplete;
 exports.adAlertTemplate = adAlertTemplate;
 exports.verifyEmailTemplate = verifyEmailTemplate;
 function welcomeTemplate(to) {
     return `<!DOCTYPE html>
-<html>
-<body> 
-<p>Dear ${to}</p>
-Congratulations and welcome to Campus Mart – your go-to destination for connecting with buyers and sellers right on your school campus! We're delighted to have you as part of our community, and we're excited to see you explore the vibrant marketplace we've tailored just for your campus needs.
-  Here's a glimpse of what Campus Mart has to offer:
-  * 		Tailored Campus Experience:
-  * 		Immerse yourself in a marketplace designed exclusively for your school community. Campus Mart brings buyers and sellers together in a convenient and local setting.
-  * 		Intuitive Navigation:
-  * 		Enjoy a seamless experience with our user-friendly interface. Navigate through categories effortlessly, use smart filters, and discover items with just a few clicks.
-  * 		Safe and Secure Transactions:
-  * 		Your safety is our priority. Campus Mart employs robust security measures to ensure all transactions are secure, providing you with a worry-free buying and selling experience.
-  * 		Effortless Communication:
-  * 		Connect with fellow students and sellers with ease. Our in-app messaging system allows you to negotiate prices, ask questions, and finalize details without leaving the app.
-  * 		Personalized Shopping:
-  * 		Experience a personalized shopping journey with recommendations tailored to your preferences and browsing history.
-  To kickstart your Campus Mart journey:
-  * Download the Campus Mart app from the App Store or Google Play Store.
-  * Create your account using this email address: [User's Email Address]
-  * Dive into the marketplace, connect with the campus community, and make transactions hassle-free.
-  Should you have any inquiries or need assistance, our dedicated support team is here to help. Simply reach out to us at [Your Support Email Address].
-  We're thrilled to have you join our Campus Mart family. Happy exploring!
-  Best regards,
-  The Campus Mart Team 
-</body></html>`;
+ <html>
+ <head>
+   <style>
+     body {
+       font-family: Arial, sans-serif;
+       margin: 0;
+       padding: 0;
+       background-color: #f9f9f9;
+       color: #333;
+       line-height: 1.6;
+     }
+     .container {
+       max-width: 600px;
+       margin: 20px auto;
+       background: #ffffff;
+       border-radius: 8px;
+       overflow: hidden;
+       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     }
+     .header {
+       background-color: #58B84F;
+       padding: 20px;
+       text-align: center;
+       color: #ffffff;
+     }
+      .header h1{
+      color: #ffffff;
+      } 
+     .header img {
+       max-width: 150px;
+       margin-bottom: 10px;
+     }
+     .content {
+       padding: 20px;
+     }
+     .content h1 {
+       color: #0073e6;
+       font-size: 24px;
+     }
+     .content p {
+       margin: 10px 0;
+     }
+     .features {
+       margin: 20px 0;
+       padding-left: 20px;
+     }
+     .features li {
+       margin-bottom: 10px;
+     }
+     .cta {
+       text-align: center;
+       margin: 20px 0;
+     }
+     .cta a {
+       background-color: #0073e6;
+       color: #ffffff;
+       text-decoration: none;
+       padding: 10px 20px;
+       border-radius: 5px;
+       font-size: 16px;
+     }
+     .cta a:hover {
+       background-color: #005bb5;
+     }
+     .footer {
+       background-color: #f1f1f1;
+       padding: 10px;
+       text-align: center;
+       font-size: 14px;
+       color: #666;
+     }
+     .footer a {
+       color: #0073e6;
+       text-decoration: none;
+     }
+     .footer a:hover {
+       text-decoration: underline;
+     }
+   </style>
+ </head>
+ <body>
+   <div class="container">
+     <!-- Header Section -->
+     <div class="header">
+       <img src="https://res.cloudinary.com/dpuaqijz4/image/upload/v1736262358/qw9z2czrktzkwno8k8fu.png" alt="9LifeBookings Logo">
+       <h1>Welcome to 9LifeBookings!</h1>
+     </div>
+     <!-- Content Section -->
+     <div class="content">
+       <p>Dear ${to},</p>
+       <p>
+         Welcome to 9LifeBookings! We’re thrilled to have you join our community of travelers and adventurers.
+       </p>
+       <p>
+         Whether you’re planning a luxurious escape, a serene weekend retreat, or a quick getaway, 9LifeBookings is here to connect you with the perfect rental options. From stunning villas to cozy homes and top-tier hotels, we’ve got something for every journey.
+       </p>
+       <h2>Here’s what you can look forward to:</h2>
+       <ul class="features">
+         <li><strong>Exclusive Listings:</strong> Access a diverse range of properties tailored to your travel needs.</li>
+         <li><strong>Seamless Experience:</strong> Book with ease through our user-friendly platform.</li>
+         <li><strong>24/7 Support:</strong> Our dedicated team is always here to assist you.</li>
+       </ul>
+       <p>
+         If you have any questions or need assistance, feel free to contact us at <a href="mailto:support@9lifebookings.com">support@9lifebookings.com</a>.
+       </p>
+       <p>Thank you for choosing 9LifeBookings. We can’t wait to be a part of your travel journey!</p>
+     </div>
+     <!-- Footer Section -->
+     <div class="footer">
+       <p>Warm regards,<br>The 9LifeBookings Team</p>
+       <p><a href="https://9lifebookings.com" target="_blank">Visit our website</a> | <a href="mailto:support@9lifebookings.com">Contact Support</a></p>
+     </div>
+   </div>
+ </body>
+ </html>
+`;
+}
+function emailDefaultTemplete(title, content) {
+    return `<!DOCTYPE html>
+  <html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: #58B84F;
+        padding: 20px;
+        text-align: center;
+        color: #ffffff;
+      }
+       .header h1{
+       color: #ffffff;
+       } 
+      .header img {
+        max-width: 150px;
+        margin-bottom: 10px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .content h1 {
+        color: #0073e6;
+        font-size: 24px;
+      }
+      .content p {
+        margin: 10px 0;
+      }
+      .features {
+        margin: 20px 0;
+        padding-left: 20px;
+      }
+      .features li {
+        margin-bottom: 10px;
+      }
+      .cta {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .cta a {
+        background-color: #0073e6;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      .cta a:hover {
+        background-color: #005bb5;
+      }
+      .footer {
+        background-color: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+      }
+      .footer a {
+        color: #0073e6;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header">
+        <img src="https://res.cloudinary.com/dpuaqijz4/image/upload/v1736262358/qw9z2czrktzkwno8k8fu.png" alt="9LifeBookings Logo">
+      </div>
+      <!-- Content Section -->
+      <div class="content">
+        <p>
+        ${content}
+        </p>
+        <p>
+          If you have any questions or need assistance, feel free to contact us at <a href="mailto:support@9lifebookings.com">support@9lifebookings.com</a>.
+        </p>
+        <p>Thank you for choosing 9LifeBookings. We can’t wait to be a part of your travel journey!</p>
+      </div>
+      <!-- Footer Section -->
+      <div class="footer">
+        <p>Warm regards,<br>The 9LifeBookings Team</p>
+        <p><a href="https://9lifebookings.com" target="_blank">Visit our website</a> | <a href="mailto:support@9lifebookings.com">Contact Support</a></p>
+      </div>
+    </div>
+  </body>
+  </html>
+ `;
 }
 function otpTemplate(otp, email) {
     return `<!DOCTYPE html>
@@ -49,7 +250,7 @@ function otpTemplate(otp, email) {
   </html> 
   `;
 }
-function verifyEmailTemplate(otp, email) {
+function verifyEmailTemplate(otp, email, user) {
     return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -74,7 +275,7 @@ function verifyEmailTemplate(otp, email) {
       .header {
         text-align: center;
         padding: 20px 0;
-        background-color: #007BFF;
+        background-color: #58B84F;
         color: #ffffff;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
@@ -87,7 +288,7 @@ function verifyEmailTemplate(otp, email) {
         display: inline-block;
         padding: 10px 20px;
         margin-top: 20px;
-        background-color: #007BFF;
+        background-color: #58B84F;
         color: #ffffff;
         text-decoration: none;
         border-radius: 5px;
@@ -107,7 +308,7 @@ function verifyEmailTemplate(otp, email) {
         <h1>Email Verification</h1>
       </div>
       <div class="content">
-        <p>Hi [User],</p>
+        <p>Hi ${user},</p>
         <p>Thank you for registering with us. Use the code below to verify your email address: ${email}</p>
         <h1>${otp}</h1>
         <p>If you did not create an account, no further action is required.</p>

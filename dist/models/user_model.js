@@ -15,6 +15,7 @@ const UserSchema = new mongoose_1.default.Schema({
     privileges: { type: String, default: "user" },
     emailVerified: { type: Boolean, default: false },
     phoneNumber: { type: Boolean, default: false },
+    suspended: { type: Boolean, default: false },
     profile: {
         address: { type: String, default: null },
         dateOfBirth: { type: String, default: null },
@@ -26,7 +27,10 @@ const UserSchema = new mongoose_1.default.Schema({
             index: "2dsphere",
             default: []
         }
-    }
+    },
+    account_id: { type: String, default: null, ref: "SubAccount" },
+    sub_account: { type: String, default: null },
+    fcmToken: { type: String, default: null }
 });
 const UserModel = mongoose_1.default.model("user", UserSchema);
 exports.default = UserModel;

@@ -39,15 +39,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const UserController = __importStar(require("../controllers/user_auth.controller"));
 const authenticate_token_1 = __importDefault(require("../middleware/authenticate_token"));
+const OrderController = __importStar(require("../controllers/orders.controller"));
 const router = (0, express_1.Router)();
 router.post('/sign-up', UserController.createUserManualSignUp);
 router.post('/login', UserController.LoginUser);
+router.post('/sign-up-google', UserController.createUserGoogleSignUp);
+router.post('/login-google', UserController.LoginUserGoogle);
 //Email Verification
-router.post('/request-otp', UserController.sendEmailOtp);
+router.post('/request-otp', UserController.requestEmailOtp);
 router.post('/verify-email', authenticate_token_1.default, UserController.verifyEmail);
 //Phone Verification
 router.post('/request-sms-otp', UserController.sendPhoneOtp);
 router.post('/verify-phone', UserController.verifyPhone);
 //Profile Update
 router.post("/update-profile", authenticate_token_1.default, UserController.updateProfilePic);
+router.patch("/firebase-token", authenticate_token_1.default, UserController.updateFirebaseToken);
+//Forgotten Password
+router.post("/forgot-password", UserController.forgotPassword);
+router.post("/confirm-password-otp", authenticate_token_1.default, UserController.confirmPasswordOTP);
+router.patch("/reset-password", authenticate_token_1.default, UserController.resetPassword);
+//Change Password
+router.patch("/change-password", authenticate_token_1.default, UserController.changePassword);
+//User's Order
+router.get("/orders", authenticate_token_1.default, OrderController.fetchCustomerOrders);
 exports.default = router;

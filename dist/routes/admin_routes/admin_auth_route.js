@@ -32,21 +32,10 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const ProductController = __importStar(require("../controllers/product.controller"));
-const orders_controller_1 = require("../controllers/orders.controller");
 const express_1 = require("express");
-const authenticate_token_1 = __importDefault(require("../middleware/authenticate_token"));
+const AdminAuthController = __importStar(require("../../controllers/admin_controller/admin.auth.controller"));
 const router = (0, express_1.Router)();
-router.post("/", authenticate_token_1.default, ProductController.addProduct);
-router.get("/", authenticate_token_1.default, ProductController.getProducts);
-router.get('/getBookings/:productId', authenticate_token_1.default, orders_controller_1.getBookingAvailability);
-router.get("/search", authenticate_token_1.default, ProductController.searchAndFilterProducts);
-router.get("/users", authenticate_token_1.default, ProductController.getUsersProducts);
-router.get("/:id", authenticate_token_1.default, ProductController.getProduct);
-router.patch("/", authenticate_token_1.default, ProductController.editProduct);
-router.delete("/", authenticate_token_1.default, ProductController.deleteProduct);
+router.post('/login', AdminAuthController.LoginUser);
+router.post('/login-google', AdminAuthController.LoginUserGoogle);
 exports.default = router;

@@ -41,7 +41,7 @@ const sendOtp = async (to, pin) => {
         pin_time_to_live: 5,
         pin_length: 4,
         pin_placeholder: pin,
-        message_text: `Your Blue Collar Confirmation Code is ${pin}. it expires in 5 minutes.`,
+        message_text: `Your 9LifeBookings Confirmation Code is ${pin}. it expires in 5 minutes.`,
         pin_type: "NUMERIC",
     };
     const options = {
