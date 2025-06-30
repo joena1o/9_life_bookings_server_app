@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createReceiptCode, disburseFund, finalizePaystackTransfer } from "../utils/create_paystack_sub_account";
+import { createReceiptCode, disburseFund, finalizePaystackTransfer, updateReceiptCode } from "../utils/create_paystack_receipants";
 import { decodeToken } from "../utils/jwt_service";
 import { JwtPayload } from "jsonwebtoken";
 import UserModel from "../models/user_model";
@@ -142,9 +142,10 @@ export const updateAccountDetails = async (req: Request, res: Response): Promise
                 business_name,
                 bank_code,
                 account_number,
+                recipient_code
             } = req.body;
             let createData = await createReceiptCode(
-                business_name, bank_code, account_number,
+                business_name, bank_code, account_number
             );
             if (createData.status) {
                 let accountDetails = await RecipientModel.findOneAndUpdate({ user_id }, {
@@ -155,12 +156,12 @@ export const updateAccountDetails = async (req: Request, res: Response): Promise
                     await UserModel.findByIdAndUpdate(user_id, {
                         $set: {
                             account_id: accountDetails?.id.toString(),
-                            sub_account: accountDetails?.recipient_code
+                            sub_account: accountDetails?.recipient_code // RECEIPANT CODE
                         }
                     },)
                     return res
                         .status(201)
-                        .json({ data: accountDetails, message: "Your bank details have been added successfully" });
+                        .json({ data: accountDetails, message: "Your bank details have been updated successfully" });
                 } else {
                     return res.status(400).json({ error: "An Error Occured while processing your request" });
                 }
@@ -199,8 +200,6 @@ export const initiatePayment = async (req: Request, res: Response): Promise<any>
                 {
                     email,
                     amount, // Amount in kobo (₦5000)
-                    //subaccount, // Subaccount code from step 1
-                    //bearer: 'subaccount',
                     metadata // Specify who bears the Paystack fee
                 },
                 {
