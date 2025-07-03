@@ -58,7 +58,7 @@ export const getBankList = async (req: Request, res: Response): Promise<any> => 
         url: `${process.env.PAYSTACK_API}/bank`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
         },
     };
     try {
@@ -203,7 +203,7 @@ export const initiatePayment = async (req: Request, res: Response): Promise<any>
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${process.env.TEST_SECRET_KEY}`,
+                        Authorization: `Bearer ${process.env.LIVE_SECRET_KEY}`,
                     },
                 }
             );
