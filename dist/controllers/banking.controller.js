@@ -58,7 +58,7 @@ const getBankList = async (req, res) => {
         url: `${process.env.PAYSTACK_API}/bank`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
         },
     };
     try {
@@ -191,7 +191,7 @@ const initiatePayment = async (req, res) => {
                 metadata // Specify who bears the Paystack fee
             }, {
                 headers: {
-                    Authorization: `Bearer ${process.env.LIVE_SECRET_KEY}`,
+                    Authorization: `Bearer ${process.env.TEST_SECRET_KEY}`,
                 },
             });
             return res.status(200).json({ data: response.data });

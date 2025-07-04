@@ -56,7 +56,7 @@ app.post('/webhook', async (req, res) => {
             res.status(400).send('Missing signature');
         }
         // Compute the HMAC hash using the secret key and request body
-        const hash = (0, crypto_1.createHmac)('sha512', process.env.LIVE_SECRET_KEY)
+        const hash = (0, crypto_1.createHmac)('sha512', process.env.TEST_SECRET_KEY)
             .update(JSON.stringify(req.body)) // Hash the stringified body
             .digest('hex'); // Convert hash to hexadecimal format
         // Compare the computed hash with the signature

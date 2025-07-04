@@ -20,7 +20,7 @@ const createReceiptCode = async (business_name, bank_code, account_number) => {
         url: `${process.env.PAYSTACK_API}/transferrecipient`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
         },
         data,
     };
@@ -47,7 +47,7 @@ const updateReceiptCode = async (business_name, bank_code, account_number, code)
         url: `${process.env.PAYSTACK_API}/transferrecipient/${code}`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
         },
         data,
     };
@@ -74,7 +74,7 @@ const disburseFund = async (reason, amount, reference, recipient) => {
         url: `${process.env.PAYSTACK_API}/transfer`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
         },
         data,
     };
@@ -98,7 +98,7 @@ const finalizePaystackTransfer = async (transfer_code, otp) => {
         url: `${process.env.PAYSTACK_API}/transfer/finalize_transfer`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
         },
         data,
     };
@@ -118,7 +118,7 @@ const getBankList = async () => {
         url: `${process.env.PAYSTACK_API}/bank`,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.LIVE_SECRET_KEY}`
+            "Authorization": `Bearer ${process.env.TEST_SECRET_KEY}`
         },
     };
     try {
