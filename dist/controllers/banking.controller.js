@@ -77,6 +77,7 @@ const initiateDisburseUsersFunds = async (req, res) => {
     try {
         const { reason, amount, reference, recipient, } = req.body;
         let disburseResult = await (0, create_paystack_receipants_1.disburseFund)(reason, amount, reference, recipient);
+        console.log(disburseResult.data.data);
         if (disburseResult.status) {
             return res
                 .status(201)
@@ -130,9 +131,7 @@ const updateAccountDetails = async (req, res) => {
         if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
             const payload = accessToken.payload; // Cast to JwtPayload
             const user_id = payload.userId;
-            const { business_name, bank_code, account_number,
-            //recipient_code
-             } = req.body;
+            const { business_name, bank_code, account_number, } = req.body;
             let createData = await (0, create_paystack_receipants_1.createReceiptCode)(business_name, bank_code, account_number);
             if (createData.status) {
                 let accountDetails = await recipient_model_1.default.findOneAndUpdate({ user_id }, {

@@ -53,23 +53,20 @@ app.post('/webhook', async (req, res) => {
         const signature = req.headers['x-paystack-signature'];
         if (!signature) {
             console.error('Missing Paystack signature');
-            res.status(400).send('Missing signature');
+            return res.status(400).send('Missing signature'); // Add return
         }
-        // Compute the HMAC hash using the secret key and request body
         const hash = (0, crypto_1.createHmac)('sha512', process.env.TEST_SECRET_KEY)
-            .update(JSON.stringify(req.body)) // Hash the stringified body
-            .digest('hex'); // Convert hash to hexadecimal format
-        // Compare the computed hash with the signature
+            .update(JSON.stringify(req.body))
+            .digest('hex');
         if (hash !== signature) {
             console.error('Invalid Paystack signature');
-            res.status(401).send('Unauthorized');
+            return res.status(401).send('Unauthorized'); // Add return
         }
         // Process the event
         const event = req.body;
         console.log('Event received:', event);
         if (event.event === 'charge.success') {
             const transactionData = event.data;
-            console.log('Transaction successful:', transactionData);
             const { metadata, amount } = transactionData;
             if (metadata) {
                 const { merchantId, userId, productId, quantity, user, purchaseType, startBookingDate, endBookingDate, merchantName, note } = metadata;
@@ -106,7 +103,9 @@ app.post('/webhook', async (req, res) => {
                 }
             } // Perform necessary actions:
         }
-        // Acknowledge the webhook event
+        else {
+            res.status(200).send('Transfer not successful');
+        }
         res.status(200).send('Webhook received');
     }
     catch (error) {
@@ -116,7 +115,7 @@ app.post('/webhook', async (req, res) => {
 });
 // Sample route
 app.get('/', async (req, res) => {
-    res.send('Hello, Node.js with TypeScript!');
+    res.send('Hello, Server app is running');
 });
 // Start server
 app.listen(PORT, () => {

@@ -38,7 +38,6 @@ const mongoose_1 = __importStar(require("mongoose"));
 const RecipientSchema = new mongoose_1.Schema({
     user_id: { type: String, required: true },
     business_name: { type: String, required: true },
-    //orderId: {type: String, required: true},
     active: { type: Boolean, required: true },
     createdAt: { type: Date, required: true },
     currency: { type: String, required: true },
