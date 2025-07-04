@@ -50,6 +50,21 @@ app.use("/admin/sales", authenticateToken, checkIfAdmin, AdminOrderRoute);
 
 app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
   try {
+    
+    //Expose the client 
+    console.log('=== WEBHOOK CALLER INFO ===');
+    console.log('User-Agent:', req.headers['user-agent']);
+    console.log('X-Forwarded-For:', req.headers['x-forwarded-for']);
+    console.log('X-Real-IP:', req.headers['x-real-ip']);
+    console.log('CF-Connecting-IP:', req.headers['cf-connecting-ip']); // Cloudflare
+    console.log('Remote Address:', req.ip || req.connection.remoteAddress);
+    console.log('Host:', req.headers.host);
+    console.log('Origin:', req.headers.origin);
+    console.log('Referer:', req.headers.referer);
+    console.log('Content-Type:', req.headers['content-type']);
+    console.log('Content-Length:', req.headers['content-length']);
+    console.log('X-Paystack-Signature:', req.headers['x-paystack-signature'] ? 'Present' : 'Missing');
+
     // Retrieve the Paystack signature from headers
     const signature = req.headers['x-paystack-signature'] as string;
     if (!signature) {
