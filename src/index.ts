@@ -115,7 +115,7 @@ app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
           startBookingDate,
           endBookingDate,
           purchaseType,
-          reference // Store Paystack reference
+          transactionReference // Store Paystack reference
         });
         await submitOrder.save();
         // Update product quantities
