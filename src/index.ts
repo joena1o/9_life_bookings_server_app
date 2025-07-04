@@ -70,9 +70,7 @@ app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
     if (event.event === 'charge.success') {
       const transactionData = event.data;
       const { metadata, amount, reference } = transactionData;
-
       const transactionReference = transactionData.reference;
-
       // Check for duplicate using transaction reference
       if (transactionReference) {
         const existingOrder = await OrderModel.findOne({

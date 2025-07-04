@@ -71,7 +71,7 @@ const orderSchema = new Schema<IOrder>(
     note: { type: String, default: null },
     amount: { type: Number, required: true },
     disbursed: { type: String, default: 'No' },
-    transactionReference: { type: String, sparse: true }, // Add this - sparse allows nulls
+    transactionReference: { type: String, required: true }, // Add this - sparse allows nulls
   },
   { timestamps: true }
 );
