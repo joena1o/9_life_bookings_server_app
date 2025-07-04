@@ -54,6 +54,7 @@ interface IOrder extends Document {
   note?: string | null;
   amount: number;
   disbursed: string;
+  transactionReference: string;
   getDecryptedDisbursed: () => string;
 }
 
@@ -70,6 +71,7 @@ const orderSchema = new Schema<IOrder>(
     note: { type: String, default: null },
     amount: { type: Number, required: true },
     disbursed: { type: String, default: 'No' },
+    transactionReference: { type: String, sparse: true }, // Add this - sparse allows nulls
   },
   { timestamps: true }
 );

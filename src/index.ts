@@ -52,29 +52,61 @@ app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
   try {
     // Retrieve the Paystack signature from headers
     const signature = req.headers['x-paystack-signature'] as string;
-
     if (!signature) {
       console.error('Missing Paystack signature');
-      return res.status(400).send('Missing signature'); // Add return
+      return res.status(400).send('Missing signature');
     }
-
     const hash = createHmac('sha512', process.env.TEST_SECRET_KEY!)
       .update(JSON.stringify(req.body))
       .digest('hex');
-
     if (hash !== signature) {
       console.error('Invalid Paystack signature');
-      return res.status(401).send('Unauthorized'); // Add return
+      return res.status(401).send('Unauthorized');
     }
-
     // Process the event
     const event = req.body;
     console.log('Event received:', event);
+    // Check if this is a charge.success event
     if (event.event === 'charge.success') {
       const transactionData = event.data;
-      const { metadata, amount } = transactionData;
+      const { metadata, amount, reference } = transactionData;
+
+      const transactionReference = transactionData.reference;
+
+      // Check for duplicate using transaction reference
+      if (transactionReference) {
+        const existingOrder = await OrderModel.findOne({
+          transactionReference: transactionReference
+        });
+
+        if (existingOrder) {
+          console.log('Transaction already processed:', transactionReference);
+          return res.status(200).send('Already processed');
+        }
+      }
       if (metadata) {
         const { merchantId, userId, productId, quantity, user, purchaseType, startBookingDate, endBookingDate, merchantName, note } = metadata;
+        // IDEMPOTENCY CHECK - Prevent duplicate orders
+        const existingOrder = await OrderModel.findOne({
+          userId,
+          productId,
+          amount,
+          // Use Paystack reference as unique identifier
+          $or: [
+            { reference: reference },
+            {
+              merchantId,
+              startBookingDate,
+              endBookingDate,
+              createdAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) } // Within last 5 minutes
+            }
+          ]
+        });
+        if (existingOrder) {
+          console.log('Order already exists, skipping processing');
+          return res.status(200).send('Order already processed');
+        }
+        // Create new order
         let submitOrder = new OrderModel({
           merchantId,
           userId,
@@ -84,44 +116,59 @@ app.post('/webhook', async (req: Request, res: Response): Promise<any> => {
           quantity,
           startBookingDate,
           endBookingDate,
-          purchaseType
+          purchaseType,
+          reference // Store Paystack reference
         });
-        await submitOrder.save(); // Middleware will encrypt "disbursed"
-        if (submitOrder) {
-          await ProductModel.findOneAndUpdate({ _id: productId, quantity: { $gte: quantity } }, { $inc: { rentedQuantity: quantity, quantity: -quantity } });
-          sendNotificationToUser(
-            "Your property has been bought",
-            `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
-            merchantId.toString()
-          );
-          sendNotificationToUser(
-            "Your payment has been confirmed",
-            `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
-            userId.toString()
-          );
-          await notificationModel.create({
-            user_id: merchantId.toString(),
-            product_id: productId,
-            noticeType: 'sale',
-            message: `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
-            title: "Your property has been bought",
-          });
-          await notificationModel.create({
-            user_id: userId.toString(),
-            product_id: productId,
-            noticeType: 'purchase',
-            message: `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
-            title: "Your payment has been confirmed",
-          });
+        await submitOrder.save();
+        // Update product quantities
+        const productUpdate = await ProductModel.findOneAndUpdate(
+          { _id: productId, quantity: { $gte: quantity } },
+          { $inc: { rentedQuantity: quantity, quantity: -quantity } }
+        );
+        if (!productUpdate) {
+          console.error('Failed to update product quantities');
+          // You might want to handle this case differently
         }
-      } // Perform necessary actions:
-    }else{
-      res.status(200).send('Transfer not successful');
+        // Send notifications (wrapped in try-catch to prevent webhook failure)
+        try {
+          await Promise.all([
+            sendNotificationToUser(
+              "Your property has been bought",
+              `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
+              merchantId.toString()
+            ),
+            sendNotificationToUser(
+              "Your payment has been confirmed",
+              `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
+              userId.toString()
+            ),
+            notificationModel.create({
+              user_id: merchantId.toString(),
+              product_id: productId,
+              noticeType: 'sale',
+              message: `Hi ${merchantName}, we're thrilled to let you know. Your property has been booked 🚀`,
+              title: "Your property has been bought",
+            }),
+            notificationModel.create({
+              user_id: userId.toString(),
+              product_id: productId,
+              noticeType: 'purchase',
+              message: `Hi ${user}, we're thrilled to let you know. Your payment for this property has been confirmed. 🚀`,
+              title: "Your payment has been confirmed",
+            })
+          ]);
+        } catch (notificationError) {
+          console.error('Error sending notifications:', notificationError);
+          // Don't fail the webhook due to notification errors
+        }
+        console.log('Order processed successfully');
+      }
     }
-    res.status(200).send('Webhook received');
+    // Always return success for valid webhooks
+    return res.status(200).send('Webhook received');
   } catch (error) {
     console.error('Error processing webhook:', error);
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 });
 
