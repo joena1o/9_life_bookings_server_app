@@ -82,6 +82,7 @@ export const initiateDisburseUsersFunds = async (req: Request, res: Response): P
             recipient,
         } = req.body;
         let disburseResult = await disburseFund(reason, amount, reference, recipient);
+        console.log(disburseResult.data.data);
         if (disburseResult.status) {
             return res
                 .status(201)
