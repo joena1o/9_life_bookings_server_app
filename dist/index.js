@@ -55,7 +55,7 @@ app.post('/webhook', async (req, res) => {
             console.error('Missing Paystack signature');
             return res.status(400).send('Missing signature'); // Add return
         }
-        const hash = (0, crypto_1.createHmac)('sha512', process.env.TEST_SECRET_KEY)
+        const hash = (0, crypto_1.createHmac)('sha512', process.env.LIVE_SECRET_KEY)
             .update(JSON.stringify(req.body))
             .digest('hex');
         if (hash !== signature) {
