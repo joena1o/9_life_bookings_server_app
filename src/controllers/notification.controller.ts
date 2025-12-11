@@ -10,7 +10,7 @@ export const getNotifications = async(req: Request, res: Response): Promise<any>
         if (accessToken && typeof accessToken !== "string" && accessToken.payload) {
             const payload = accessToken.payload as JwtPayload; // Cast to JwtPayload
             const user_id = payload.userId;
-        const getNotifications = await notificationModel.find({user_id: user_id}).sort({ createdAt: -1 });
+        const getNotifications = await notificationModel.find({ user_id: user_id, noticeType: { $ne: 'admin' } }).sort({ createdAt: -1 });
         return res.status(200).json({data: getNotifications});
     }
     }catch(error){

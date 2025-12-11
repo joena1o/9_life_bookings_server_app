@@ -17,7 +17,15 @@ export const addProduct = async (req: Request, res: Response): Promise<any> => {
                 noticeType: 'admin',
                 message: `Hi Admin, A new property has been upload. click here to review or go to properties tab to inspect`,
                 title:  "A new property has been Upload",
-              });
+            });
+            // Notify user that their product is under review
+            await notificationModel.create({
+                user_id:  product.user_id,
+                product_id: product._id,
+                noticeType: 'review',
+                message: `Your property "${product.title}" has been submitted and is now under review. We'll notify you once it's approved.`,
+                title:  "Property Submitted for Review",
+            });
             return res
                 .status(201)
                 .json({ added: true, message: "Product Uploaded Successfully" });
